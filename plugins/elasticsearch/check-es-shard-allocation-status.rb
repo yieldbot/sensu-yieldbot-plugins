@@ -71,10 +71,10 @@ class ESShardAllocationStatus < Sensu::Plugin::Check::CLI
 
   def run
     if is_master
-      transient = get_status('transient')
-      persistent = get_status('persistent')
-      case get_status
-      when transient == persistent
+      transient   = get_status('transient')
+      persistent  = get_status('persistent')
+      
+      if transient == persistent
         ok "Persistent and transient allocation match:  #{persistent}"
       else
         critical "Persistent(#{persistent}) and transient(#{transient}) shard allocation do not match."

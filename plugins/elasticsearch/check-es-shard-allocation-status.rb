@@ -1,11 +1,11 @@
 #!/usr/bin/env ruby
 #
-# Checks ElasticSearch cluster status
+# Checks ElasticSearch shard allocation setting status
 # ===
 #
 # DESCRIPTION:
-#   This plugin checks the ElasticSearch cluster status, using its API.
-#   This plugin is designed towards the Elasticsearch API Version 1.x
+#   This plugin checks the ElasticSearch shard allocation persistent and transient settings
+#   and will return status based on a difference in those settings.
 #
 # OUTPUT:
 #   plain-text
@@ -17,7 +17,6 @@
 #   sensu-plugin Ruby gem
 #   rest-client Ruby gem
 #
-# Copyright 2012 Sonian, Inc <chefs@sonian.net>
 # Copyright 2014 Yieldbot, Inc  <devops@yieldbot.com>
 #
 # Released under the same terms as Sensu (the MIT license); see LICENSE
@@ -28,7 +27,7 @@ require 'sensu-plugin/check/cli'
 require 'rest-client'
 require 'json'
 
-class ESClusterStatus < Sensu::Plugin::Check::CLI
+class ESShardAllocationStatus < Sensu::Plugin::Check::CLI
 
   option :scheme,
     :description => 'URI scheme',
@@ -64,24 +63,24 @@ class ESClusterStatus < Sensu::Plugin::Check::CLI
     local['nodes'].keys.first == state['master_node']
   end
 
-  def get_status
-    health = get_es_resource('/_cluster/health')
-    health['status'].downcase
+  def get_status(type)
+    settings = get_es_resource('/_cluster/settings')
+    # Get the status for the given type, or default to 'all' which is the ES default
+    status = settings[type]['cluster']['routing']['allocation']['enable'].downcase || 'all'
   end
 
   def run
     if is_master
+      transient = get_status('transient')
+      persistent = get_status('persistent')
       case get_status
-      when 'green'
-        ok 'Cluster is green'
-      when 'yellow'
-        warning 'Cluster is yellow'
-      when 'red'
-        critical 'Cluster is red'
+      when transient == persistent
+        ok "Persistent and transient allocation match:  #{persistent}"
+      else
+        critical "Persistent(#{persistent}) and transient(#{transient}) shard allocation do not match."
       end
     else
       ok 'Not the master'
     end
   end
-
 end

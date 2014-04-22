@@ -66,7 +66,11 @@ class ESShardAllocationStatus < Sensu::Plugin::Check::CLI
   def get_status(type)
     settings = get_es_resource('/_cluster/settings')
     # Get the status for the given type, or default to 'all' which is the ES default
-    status = settings[type]['cluster']['routing']['allocation']['enable'].downcase || 'all'
+    status = begin
+      settings[type]['cluster']['routing']['allocation']['enable'].downcase
+    rescue
+      'all'
+    end
   end
 
   def run

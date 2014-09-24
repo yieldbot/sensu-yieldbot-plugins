@@ -39,6 +39,9 @@ CURR=$(sysctl net.netfilter.nf_conntrack_count | awk '{ print $3 }')
 # Percent usage of conncetions
 PERCENT=$(echo "scale=3; $CURR / $MAX *100" | bc -l | cut -d "." -f1)
 
+# If percent isnt defined set it to 0
+PERCENT=${PERCENT:=0}
+
 if [[ $PERCENT -ge $CRIT ]] ; then
   echo "NETFILTER CONNTRACK CRITICAL - $PERCENT"
   exit 2

@@ -1,4 +1,28 @@
 #! /usr/bin/env ruby
+#
+# Check Raid Status
+# ===
+#
+# DESCRIPTION:
+#   This plugin provides a method for monitoring the raid array.
+#   Further documentation can be found here:
+#   https://raid.wiki.kernel.org/index.php/Mdstat#md_config.2Fstatus_line
+#   http://linux.die.net/man/4/md
+#   https://www.kernel.org/doc/Documentation/md.txt
+#
+# OUTPUT:
+#   plain-text
+#
+# PLATFORMS:
+#   all
+#
+# DEPENDENCIES:
+#
+# Copyright 2014 Yieldbot, Inc  <devops@yieldbot.com>
+#
+# Released under the same terms as Sensu (the MIT license); see LICENSE
+# for details.
+#
 
 # Exit status codes
 EXIT_OK = 0
@@ -7,7 +31,7 @@ EXIT_CRIT = 2
 exit_code = EXIT_OK
 
 
-RAID_INFO = "/Users/mjones/projects/elzar/org_cookbooks/monitor/data.test"
+raid_info = "/proc/mdstat"
 
 def read_file(raid_info)
   a = File.open(raid_info,"r")
@@ -16,16 +40,19 @@ def read_file(raid_info)
   return data
 end
 
-raid_status= read_file(RAID_INFO)
-
-matt_test = raid_status.split(/(md[0-9]*)/)
+if File.exists? "/proc/mdstat"
+  raid_data = read_file(raid_info).split(/(md[0-9]*)/)
+else
+ puts "/proc/mdstat is not present"
+ exit(exit_code)
+end
 
 h = Hash.new
 n = 0
 k = ""
 v = ""
 
-matt_test.each do |data|
+raid_data.each do |data|
   if n.even? and n != 0
     v = data
     h.store(k,v)
@@ -41,7 +68,6 @@ h.each do |key, value|
   working_dev = value.match(/[0-9]*\/[0-9]*/).to_s[2]
   failed_dev = value.match(/\[[U,_]*\]/).to_s.count "_"
   recovery_state = value.include? "recovery"
-  puts recovery_state.inspect
 
   line_out =  "#{key} is #{raid_state}
                #{total_dev} total devices

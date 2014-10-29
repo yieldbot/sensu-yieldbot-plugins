@@ -9,18 +9,19 @@ cmd = '/_cat/indices?v'
 valid_index = {}
 dupe_index = {}
 
-#file_list = ['events', 'agg', 'config']
-#file_list.each do |u|
-  #input = File.open(u, 'r')
-  #data = input.read
-   url.each do |u|
-   data = `curl #{ u }#{ port }#{ cmd }`
-  index_arr = data.split("\n")
+file_list = ['events', 'agg', 'config']
+file_list.each do |u|
+  input = File.open(u, 'r')
+  index_arr = input.read.split("\n")
+  # url.each do |u|
+  # data = `curl #{ u }#{ port }#{ cmd }`
   index_arr.each do |t|
-    if valid_index.key?(t.split[1])
-      dupe_index[t.split[1]] = [] unless dupe_index[t.split[1]].kind_of?(Array)
-      dupe_index[t.split[1]] << u
-      dupe_index[t.split[1]] << valid_index[t.split[1]] unless dupe_index[t.split[1]].include?(valid_index[t.split[1]])
+    t = t.split[1]
+    # puts t
+    if valid_index.key?(t)
+      dupe_index[t] = [] unless dupe_index[t].is_a?(Array)
+      dupe_index[t] << u
+      dupe_index[t] << valid_index[t] unless dupe_index[t].include?(valid_index[t])
     else
       valid_index[t.split[1]] = u
     end

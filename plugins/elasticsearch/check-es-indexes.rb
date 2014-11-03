@@ -16,7 +16,6 @@ class CheckESClusterIndex < Sensu::Plugin::Check::CLI
     :long => '--debug'
 
   def run
-    #url = ['deves-events.elasticsearch.service.consul', 'deves-aggregation.elasticsearch.service.consul', 'deves-config.elasticsearch.service.consul']
     port = ':9200'
     cmd = '/_cat/indices?v | tail -n +2'
 

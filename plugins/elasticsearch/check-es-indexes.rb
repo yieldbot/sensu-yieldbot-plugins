@@ -4,13 +4,19 @@ require 'sensu-plugin/check/cli'
 
 class CheckESClusterIndex < Sensu::Plugin::Check::CLI
 
+  option :cluster,
+    :description => 'Array of clusters to check',
+    :short => '-C CLUSTER[,CLUSTER]',
+    :long => '--cluster CLUSTER[,CLUSTER]',
+    :proc => proc { |a| a.split(',') }
+
   option :debug,
     :description => 'Debug',
     :short => '-d',
     :long => '--debug'
 
   def run
-    url = ['deves-events.elasticsearch.service.consul', 'deves-aggregation.elasticsearch.service.consul', 'deves-config.elasticsearch.service.consul']
+    #url = ['deves-events.elasticsearch.service.consul', 'deves-aggregation.elasticsearch.service.consul', 'deves-config.elasticsearch.service.consul']
     port = ':9200'
     cmd = '/_cat/indices?v | tail -n +2'
 
@@ -21,7 +27,7 @@ class CheckESClusterIndex < Sensu::Plugin::Check::CLI
   # file_list.each do |u|
   #  input = File.open(u, 'r')
   #  index_arr = input.read.split("\n")
-    url.each do |u|
+    config[:cluster].each do |u|
       index_arr = `curl -s #{ u }#{ port }#{ cmd }`.split("\n")
       index_arr.each do |t|
         t = t.split[1]

@@ -5,7 +5,7 @@ require 'socket'
 
 hostname = 'localhost'
 port = '3030'
-socket_input = '{ "name": "test_check", "output": "some output", "status": 1 }'
+socket_input = '{ "name": "api_call", "output": "delete", "handler": "sensu-api-handler"}'
 
 a = TCPSocket.open(hostname, port)
 

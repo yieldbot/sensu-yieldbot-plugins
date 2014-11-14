@@ -1,6 +1,6 @@
 #! /usr/bin/env ruby
 #
-# Check Stash
+# Sensu Api Handler
 # ===
 #
 # DESCRIPTION:
@@ -108,11 +108,18 @@ class CheckStash < Sensu::Plugin::Check::CLI
   end
 
   def run
+    event = JSON.parse(STDIN.read, :symbolize_names => true)
+    file_name = "/tmp/sensu_#{event[:client][:name]}_#{event[:check][:name]}"
+    File.open(file_name, 'w') do |file|
+      file.write(JSON.pretty_generate(event))
+    end
+    #puts event
+
     # ORANGE
     # sensu_master
-    stashes = acquire_stashes
-    process_stashes(stashes)
-    ok "Stashes have been processed"
+    #stashes = acquire_stashes
+    #process_stashes(stashes)
+    #ok "Stashes have been processed"
   end
 
 end

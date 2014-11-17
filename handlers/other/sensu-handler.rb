@@ -122,13 +122,13 @@ class CheckStash < Sensu::Plugin::Check::CLI
     File.open(file_name, 'w') do |file|
       file.write(JSON.pretty_generate(event))
     end
-    #puts event
+     # puts event
 
     # ORANGE
     # sensu_master
-    #stashes = acquire_stashes
-    #process_stashes(stashes)
-    #ok "Stashes have been processed"
+    # stashes = acquire_stashes
+    # process_stashes(stashes)
+    # ok "Stashes have been processed"
   end
 
 end

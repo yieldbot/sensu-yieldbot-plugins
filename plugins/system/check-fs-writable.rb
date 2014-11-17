@@ -40,7 +40,7 @@ $EXIT_CRIT = 2
 
 class CheckFSWritable < Sensu::Plugin::Check::CLI
 
-  #YELLOW
+  # #YELLOW
   # this should be an array of directories, the goal is not to run a seperate check
   #   for each directory but one check for as many directories as desired
   option :dir,
@@ -48,7 +48,6 @@ class CheckFSWritable < Sensu::Plugin::Check::CLI
          :short => '-d DIRECTORY',
          :long => '--directory DIRECTORY',
          :proc => proc { |a| a.split(',') }
-
 
   option :auto,
          :description => 'Auto discover mount points via fstab',

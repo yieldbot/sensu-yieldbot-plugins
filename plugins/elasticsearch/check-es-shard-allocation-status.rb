@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby
+#! /usr/bin/env ruby
 #
 # Checks ElasticSearch shard allocation setting status
 # ===
@@ -14,13 +14,22 @@
 #   all
 #
 # DEPENDENCIES:
-#   sensu-plugin Ruby gem
-#   rest-client Ruby gem
+#   gem: sensu-plugin
+#   gem: rest-client
 #
-# Copyright 2014 Yieldbot, Inc  <devops@yieldbot.com>
+# #YELLOW
+# needs example command
+# EXAMPLES:
 #
-# Released under the same terms as Sensu (the MIT license); see LICENSE
-# for details.
+#
+# NOTES:
+#
+# LICENSE:
+#   Copyright 2014 Yieldbot, Inc  <devops@yieldbot.com>
+#   Released under the same terms as Sensu (the MIT license); see LICENSE
+#   for details.
+#
+
 
 require 'rubygems' if RUBY_VERSION < '1.9.0'
 require 'sensu-plugin/check/cli'
@@ -30,21 +39,21 @@ require 'json'
 class ESShardAllocationStatus < Sensu::Plugin::Check::CLI
 
   option :scheme,
-    :description => 'URI scheme',
-    :long => '--scheme SCHEME',
-    :default => 'http'
+         :description => 'URI scheme',
+         :long => '--scheme SCHEME',
+         :default => 'http'
 
   option :server,
-    :description => 'Elasticsearch server',
-    :short => '-s SERVER',
-    :long => '--server SERVER',
-    :default => 'localhost'
+         :description => 'Elasticsearch server',
+         :short => '-s SERVER',
+         :long => '--server SERVER',
+         :default => 'localhost'
 
   option :port,
-    :description => 'Port',
-    :short => '-p PORT',
-    :long => '--port PORT',
-    :default => '9200'
+         :description => 'Port',
+         :short => '-p PORT',
+         :long => '--port PORT',
+         :default => '9200'
 
   def get_es_resource(resource)
     begin
@@ -77,7 +86,7 @@ class ESShardAllocationStatus < Sensu::Plugin::Check::CLI
     if is_master
       transient   = get_status('transient')
       persistent  = get_status('persistent')
-      
+
       if transient == persistent
         ok "Persistent and transient allocation match:  #{persistent}"
       else

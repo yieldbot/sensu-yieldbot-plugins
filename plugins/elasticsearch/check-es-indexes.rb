@@ -1,28 +1,56 @@
 #! /usr/bin/env ruby
+#
+# Check Elastic Search Indexes
+# ===
+#
+# DESCRIPTION:
+#   This plugin will check a a node for dupe indexes
+#
+# OUTPUT:
+#   plain-text
+#
+# PLATFORMS:
+#   all
+#
+# DEPENDENCIES:
+#   gem: sensu-plugin
+#
+# #YELLOW
+# needs example command
+# EXAMPLES:
+#
+#
+# NOTES:
+#
+# LICENSE:
+#   Copyright 2014 Yieldbot, Inc  <devops@yieldbot.com>
+#   Released under the same terms as Sensu (the MIT license); see LICENSE
+#   for details.
+#
 
 require 'sensu-plugin/check/cli'
 
 class CheckESClusterIndex < Sensu::Plugin::Check::CLI
 
   option :cluster,
-    :description => 'Array of clusters to check',
-    :short => '-C CLUSTER[,CLUSTER]',
-    :long => '--cluster CLUSTER[,CLUSTER]',
-    :proc => proc { |a| a.split(',') }
+         :description => 'Array of clusters to check',
+         :short => '-C CLUSTER[,CLUSTER]',
+         :long => '--cluster CLUSTER[,CLUSTER]',
+         :proc => proc { |a| a.split(',') }
 
   option :ignore,
-    :description => 'Comma separated list of indexes to ignore',
-    :short => '-i INDEX[,INDEX]',
-    :long => '--ignore INDEX[,INDEX]',
-    :proc => proc { |a| a.split(',') }
+         :description => 'Comma separated list of indexes to ignore',
+         :short => '-i INDEX[,INDEX]',
+         :long => '--ignore INDEX[,INDEX]',
+         :proc => proc { |a| a.split(',') }
 
   option :debug,
-    :description => 'Debug',
-    :short => '-d',
-    :long => '--debug'
+         :description => 'Debug',
+         :short => '-d',
+         :long => '--debug'
 
   def run
-    # If only one cluster is given, no need to check the indexes 
+    # If only one cluster is given, no need to check the indexes
     ok 'All indexes are unique' if config[:cluster].length == 1
 
     port = ':9200'
@@ -31,10 +59,10 @@ class CheckESClusterIndex < Sensu::Plugin::Check::CLI
     valid_index = {}
     dupe_index = {}
 
-  # file_list = ['events', 'agg', 'config']
-  # file_list.each do |u|
-  #  input = File.open(u, 'r')
-  #  index_arr = input.read.split("\n")
+    # file_list = ['events', 'agg', 'config']
+    # file_list.each do |u|
+    #  input = File.open(u, 'r')
+    #  index_arr = input.read.split("\n")
     config[:cluster].each do |u|
       index_arr = `curl -s #{ u }#{ port }#{ cmd }`.split("\n")
       index_arr.each do |t|

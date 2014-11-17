@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby
+#! /usr/bin/env ruby
 #
 # Checks ElasticSearch cluster status
 # ===
@@ -14,14 +14,22 @@
 #   all
 #
 # DEPENDENCIES:
-#   sensu-plugin Ruby gem
-#   rest-client Ruby gem
+#   gem: sensu-plugin
+#   gem: rest-client
+#   gem: json
 #
-# Copyright 2012 Sonian, Inc <chefs@sonian.net>
-# Copyright 2014 Yieldbot, Inc  <devops@yieldbot.com>
+# #YELLOW
+# needs example command
+# EXAMPLES:
 #
-# Released under the same terms as Sensu (the MIT license); see LICENSE
-# for details.
+#
+# NOTES:
+#
+# LICENSE:
+#   Copyright 2014 Yieldbot, Inc  <devops@yieldbot.com>
+#   Released under the same terms as Sensu (the MIT license); see LICENSE
+#   for details.
+#
 
 require 'rubygems' if RUBY_VERSION < '1.9.0'
 require 'sensu-plugin/check/cli'
@@ -31,21 +39,21 @@ require 'json'
 class ESClusterStatus < Sensu::Plugin::Check::CLI
 
   option :scheme,
-    :description => 'URI scheme',
-    :long => '--scheme SCHEME',
-    :default => 'http'
+         :description => 'URI scheme',
+         :long => '--scheme SCHEME',
+         :default => 'http'
 
   option :server,
-    :description => 'Elasticsearch server',
-    :short => '-s SERVER',
-    :long => '--server SERVER',
-    :default => 'localhost'
+         :description => 'Elasticsearch server',
+         :short => '-s SERVER',
+         :long => '--server SERVER',
+         :default => 'localhost'
 
   option :port,
-    :description => 'Port',
-    :short => '-p PORT',
-    :long => '--port PORT',
-    :default => '9200'
+         :description => 'Port',
+         :short => '-p PORT',
+         :long => '--port PORT',
+         :default => '9200'
 
   def get_es_resource(resource)
     begin

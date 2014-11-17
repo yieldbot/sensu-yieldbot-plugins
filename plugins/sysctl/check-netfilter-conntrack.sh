@@ -1,10 +1,13 @@
-#!/bin/bash
+#! /usr/bin/env ruby
 #
-# Check Net Filter Connection Track Table Usage
+#   This plugin provides a method for monitoring the percentage used of the nf_conntrack hash
 # ===
 #
 # DESCRIPTION:
-#   This plugin provides a method for monitoring the percentage used of the nf_conntrack hash
+#   This plugin will check a stash for a delete value and expire.
+#   it after 60 seconds.
+#   This was adapted from:
+#   https://github.com/agent462/sensu-check-stashes
 #
 # OUTPUT:
 #   plain-text
@@ -13,11 +16,21 @@
 #   all
 #
 # DEPENDENCIES:
+#   gem: sensu-plugin
+#   gem: json
 #
-# Copyright 2014 Yieldbot, Inc  <devops@yieldbot.com>
+# #YELLOW
+# needs example command
+# EXAMPLES:
 #
-# Released under the same terms as Sensu (the MIT license); see LICENSE
-# for details.
+#
+# NOTES:
+#
+# LICENSE:
+#   Copyright 2014 Yieldbot, Inc  <devops@yieldbot.com>
+#   Released under the same terms as Sensu (the MIT license); see LICENSE
+#   for details.
+#
 
 # CLI Options
 while getopts ':w:c:' OPT; do

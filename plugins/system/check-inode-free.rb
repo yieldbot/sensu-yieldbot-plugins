@@ -13,11 +13,19 @@
 #   all
 #
 # DEPENDENCIES:
+#   gem: sensu-plugin
 #
-# Copyright 2014 Yieldbot, Inc  <devops@yieldbot.com>
+# #YELLOW
+# needs example command
+# EXAMPLES:
 #
-# Released under the same terms as Sensu (the MIT license); see LICENSE
-# for details.
+#
+# NOTES:
+#
+# LICENSE:
+#   Copyright 2014 Yieldbot, Inc  <devops@yieldbot.com>
+#   Released under the same terms as Sensu (the MIT license); see LICENSE
+#   for details.
 #
 
 require 'rubygems' if RUBY_VERSION < '1.9.0'
@@ -26,41 +34,43 @@ require 'sensu-plugin/check/cli'
 class CheckInode < Sensu::Plugin::Check::CLI
 
   option :fstype,
-    :short => '-t TYPE',
-    :proc => proc {|a| a.split(',') }
+         :short => '-t TYPE',
+         :proc => proc { |a| a.split(',') }
 
   option :ignoretype,
-    :short => '-x TYPE',
-    :proc => proc {|a| a.split(',') }
+         :short => '-x TYPE',
+         :proc => proc { |a| a.split(',') }
 
   option :ignoremnt,
-    :short => '-i MNT',
-    :proc => proc {|a| a.split(',') }
+         :short => '-i MNT',
+         :proc => proc { |a| a.split(',') }
 
   option :ignoreline,
-    :short => '-l PATTERN[,PATTERN]',
-    :description => 'Ignore df line(s) matching pattern(s)',
-    :proc => proc { |a| a.split(',') }
+         :short => '-l PATTERN[,PATTERN]',
+         :description => 'Ignore df line(s) matching pattern(s)',
+         :proc => proc { |a| a.split(',') }
 
   option :includeline,
-    :short => '-L PATTERN[,PATTERN]',
-    :description => 'Only include df line(s) matching pattern(s)',
-    :proc => proc { |a| a.split(',') }
+         :short => '-L PATTERN[,PATTERN]',
+         :description => 'Only include df line(s) matching pattern(s)',
+         :proc => proc { |a| a.split(',') }
 
   option :warn,
-    :short => '-w PERCENT',
-    :proc => proc {|a| a.to_i },
-    :default => 80
+         :short => '-w PERCENT',
+         # #YELLOW
+         :proc => proc { |a| a.to_i },
+         :default => 80
 
   option :crit,
-    :short => '-c PERCENT',
-    :proc => proc {|a| a.to_i },
-    :default => 90
+         :short => '-c PERCENT',
+         # #YELLOW
+         :proc => proc { |a| a.to_i },
+         :default => 90
 
   option :debug,
-      :short => '-d',
-      :long => '--debug',
-      :description => 'Output list of included filesystems'
+         :short => '-d',
+         :long => '--debug',
+         :description => 'Output list of included filesystems'
 
   def initialize
     super
@@ -69,6 +79,7 @@ class CheckInode < Sensu::Plugin::Check::CLI
     @line_count = 0
   end
 
+  # #YELLOW
   def read_inode_pct
     `df -iPT`.split("\n").drop(1).each do |line|
       begin

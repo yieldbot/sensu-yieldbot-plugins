@@ -1,3 +1,5 @@
+source 'https://rubygems.org'
+
 gem 'sensu-plugin'
 
 group :test do

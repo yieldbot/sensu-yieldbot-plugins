@@ -68,8 +68,8 @@ class CheckFSWritable < Sensu::Plugin::Check::CLI
   end
 
   def get_mnt_pts
-     # `grep VolGroup /proc/self/mounts | awk '{print $2, $4}' | awk -F, '{print $1}' | awk '{print $1, $2}'`
-     `grep VolGroup proc_mounts.test | awk '{print $2, $4}' | awk -F, '{print $1}' | awk '{print $1, $2}'`
+    `grep VolGroup /proc/self/mounts | awk '{print $2, $4}' | awk -F, '{print $1}' | awk '{print $1, $2}'`
+    # `grep VolGroup proc_mounts.test | awk '{print $2, $4}' | awk -F, '{print $1}' | awk '{print $1, $2}'`
   end
 
   def is_rw_in_proc(mount_info)
@@ -80,7 +80,7 @@ class CheckFSWritable < Sensu::Plugin::Check::CLI
 
   def is_rw_test(mount_info)
     mount_info.each do |pt|
-    Dir.exist? pt.split[0] || @crit_pt_test << "#{ pt.split[0] }"
+    (Dir.exist? pt.split[0]) || (@crit_pt_test << "#{ pt.split[0] }")
     file = Tempfile.new('.sensu', pt.split[0])
     puts "The temp file we are writing to is: #{ file.path }" if config[:debug]
     # #YELLOW
@@ -92,34 +92,36 @@ class CheckFSWritable < Sensu::Plugin::Check::CLI
     end
   end
 
-  def run
+  def auto_discover
     # #YELLOW
-    #  set this to be a case statement, it just makes sense here
-    if config[:auto]
-      # #YELLOW
-      # this will only work for a single namespace as of now
-      mount_info = get_mnt_pts.split("\n")
-      warning 'No mount points found' if mount_info.length == 0
-      # #YELLOW
-      #  I want to map this at some point to make it pretty and eaiser to read for large filesystems
-      puts 'This is a list of mount_pts and their current status: ', mount_info if config[:debug]
-      is_rw_in_proc(mount_info)
-      is_rw_test(mount_info)
-      puts "The critical mount points according to proc are: #{ @crit_pt_proc }" if config[:debug]
-      puts "The critical mount points according to actual testing are: #{ @crit_pt_test }" if config[:debug]
-    elsif config[:dir]
-      puts config[:dir]
+    # this will only work for a single namespace as of now
+    mount_info = get_mnt_pts.split("\n")
+    warning 'No mount points found' if mount_info.length == 0
+    # #YELLOW
+    #  I want to map this at some point to make it pretty and eaiser to read for large filesystems
+    puts 'This is a list of mount_pts and their current status: ', mount_info if config[:debug]
+    is_rw_in_proc(mount_info)
+    is_rw_test(mount_info)
+    puts "The critical mount points according to proc are: #{ @crit_pt_proc }" if config[:debug]
+    puts "The critical mount points according to actual testing are: #{ @crit_pt_test }" if config[:debug]
+  end
 
-      Dir.exist? config[:dir] || @crit_pt_test << "#{ config[:dir] }"
-      file = Tempfile.new('.sensu', config[:dir])
+  def manual_test
+    config[:dir].each do |d|
+      (Dir.exist? d) || (@crit_pt_test << "#{ d }")
+      file = Tempfile.new('.sensu', d)
       puts "The temp file we are writing to is: #{ file.path }" if config[:debug]
       # #YELLOW
       #  need to add a check here to validate permissions, if none it pukes
-      file.write('mops') || @crit_pt_test <<  "#{ config[:dir] }"
-      file.read || @crit_pt_test <<  "#{ config[:dir] }"
+      file.write('mops') || @crit_pt_test <<  "#{ d }"
+      file.read || @crit_pt_test <<  "#{ d }"
       file.close
       file.unlink
     end
+  end
+
+  def run
+    (auto_discover if config[:auto]) || (manual_test if config[:dir]) || (warning 'No directorties to check')
     usage_summary
   end
 end

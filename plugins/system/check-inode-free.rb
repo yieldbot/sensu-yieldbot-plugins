@@ -4,7 +4,9 @@
 # ===
 #
 # DESCRIPTION:
-#   This plugin provides a method for monitoring the inode usage.  It will alert on the percentage used.  This is a port of the sensu community plugin 'check-disk', all I did was change df to use inodes.
+#   This plugin provides a method for monitoring the inode usage.
+#   It will alert on the percentage used.  This is a port of the sensu
+#   community plugin 'check-disk', all I did was change df to use inodes.
 #
 # OUTPUT:
 #   plain-text

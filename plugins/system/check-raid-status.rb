@@ -55,7 +55,7 @@ n = 0
 k = ''
 v = ''
 
-raid_data.each do |data|
+@raid_data.each do |data|
   if n.even? && n != 0
     v = data
     h.store(k, v)

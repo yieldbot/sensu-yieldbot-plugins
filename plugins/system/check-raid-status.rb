@@ -45,7 +45,7 @@ def read_file(raid_info)
   a = File.open(raid_info, 'r')
   data = a.read
   a.close
-  return data
+  # return data
 end
 
 if File.exist? '/proc/mdstat'

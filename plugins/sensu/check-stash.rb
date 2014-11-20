@@ -16,11 +16,20 @@
 #   all
 #
 # DEPENDENCIES:
+#   gem: sensu-plugin
+#   gem: json
 #
-# Copyright 2014 Yieldbot, Inc  <devops@yieldbot.com>
+# #YELLOW
+# needs example command
+# EXAMPLES:
 #
-# Released under the same terms as Sensu (the MIT license); see LICENSE
-# for details.
+#
+# NOTES:
+#
+# LICENSE:
+#   Copyright 2014 Yieldbot, Inc  <devops@yieldbot.com>
+#   Released under the same terms as Sensu (the MIT license); see LICENSE
+#   for details.
 #
 
 require 'sensu-plugin/check/cli'
@@ -30,19 +39,19 @@ require 'json'
 
 class CheckStash < Sensu::Plugin::Check::CLI
   option :api,
-         :short       => '-a URL',
-         :long        => '--api URL',
+         :short => '-a URL',
+         :long => '--api URL',
          :description => 'sensu api url',
-         :default     => 'http://localhost:4567'
+         :default => 'http://localhost:4567'
 
   option :user,
-         :short       => '-u USER',
-         :long        => '--user USER',
+         :short => '-u USER',
+         :long => '--user USER',
          :description => 'sensu api user'
 
   option :password,
-         :short       => '-p PASSOWRD',
-         :long        => '--password PASSWORD',
+         :short => '-p PASSOWRD',
+         :long => '--password PASSWORD',
          :description => 'sensu api password'
 
   def api_request(resource, method)
@@ -111,8 +120,9 @@ class CheckStash < Sensu::Plugin::Check::CLI
   def run
     # ORANGE
     # sensu_master
-    # stashes = acquire_stashes
-    # process_stashes(stashes)
+    #stashes = acquire_stashes
+    #process_stashes(stashes)
     ok 'Stashes have been processed'
   end
+
 end

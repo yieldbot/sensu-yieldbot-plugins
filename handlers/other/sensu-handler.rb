@@ -47,12 +47,14 @@ class CheckStash < Sensu::Plugin::Check::CLI
   option :user,
          :short       => '-u USER',
          :long        => '--user USER',
-         :description => 'sensu api user'
+         :description => 'sensu api user',
+         :default     => 'admin'
 
   option :password,
          :short       => '-p PASSOWRD',
          :long        => '--password PASSWORD',
-         :description => 'sensu api password'
+         :description => 'sensu api password',
+         :default     => 'password'
 
   def api_request(resource, method)
     uri = URI.parse(config[:api] + resource)
@@ -119,11 +121,11 @@ class CheckStash < Sensu::Plugin::Check::CLI
 
   def run
     event = JSON.parse(STDIN.read, :symbolize_names => true)
-    file_name = "/tmp/sensu_#{event[:client][:name]}_#{event[:check][:name]}"
-    File.open(file_name, 'w') do |file|
-      file.write(JSON.pretty_generate(event))
-    end
-    puts [:client][:name]
+    # file_name = "/tmp/sensu_#{event[:client][:name]}_#{event[:check][:name]}"
+    # File.open(file_name, 'w') do |file|
+    #  file.write(JSON.pretty_generate(event))
+    # end
+    # puts [:client][:name]
 
     # ORANGE
     # sensu_master

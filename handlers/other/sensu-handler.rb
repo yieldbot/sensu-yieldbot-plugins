@@ -39,19 +39,19 @@ require 'json'
 
 class CheckStash < Sensu::Plugin::Check::CLI
   option :api,
-         :short => '-a URL',
-         :long => '--api URL',
+         :short       => '-a URL',
+         :long        => '--api URL',
          :description => 'sensu api url',
-         :default => 'http://localhost:4567'
+         :default     => 'http://localhost:4567'
 
   option :user,
-         :short => '-u USER',
-         :long => '--user USER',
+         :short       => '-u USER',
+         :long        => '--user USER',
          :description => 'sensu api user'
 
   option :password,
-         :short => '-p PASSOWRD',
-         :long => '--password PASSWORD',
+         :short       => '-p PASSOWRD',
+         :long        => '--password PASSWORD',
          :description => 'sensu api password'
 
   def api_request(resource, method)

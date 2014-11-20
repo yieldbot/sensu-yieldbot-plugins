@@ -120,8 +120,8 @@ class CheckStash < Sensu::Plugin::Check::CLI
   def run
     # ORANGE
     # sensu_master
-    #stashes = acquire_stashes
-    #process_stashes(stashes)
+    # stashes = acquire_stashes
+    # process_stashes(stashes)
     ok 'Stashes have been processed'
   end
 

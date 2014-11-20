@@ -41,15 +41,10 @@ exit_code = EXIT_OK
 
 raid_info = '/proc/mdstat'
 
-def read_file(raid_info)
-  a = File.open(raid_info, 'r')
-  data = a.read
-  a.close
-  return data
-end
-
 if File.exist? '/proc/mdstat'
-  raid_data = read_file(raid_info).split(/(md[0-9]*)/)
+  File.open(raid_info, 'r') do |f|
+    @raid_data = f.read.split(/(md[0-9]*)/)
+  end
 else
  puts '/proc/mdstat is not present'
  exit(exit_code)

@@ -102,6 +102,7 @@ class CheckStash < Sensu::Plugin::Check::CLI
   def delete_stash(path)
     resource = "/stashes/#{path}"
     method = 'Delete'
+    res = api_request(resource, method)
     response?(res.code) ? (puts "STASH: #{resource} was deleted") : (warning "Deletion of #{resource} failed.")
   end
 
@@ -119,8 +120,8 @@ class CheckStash < Sensu::Plugin::Check::CLI
   def run
     # ORANGE
     # sensu_master
-    stashes = acquire_stashes
-    process_stashes(stashes)
+    #stashes = acquire_stashes
+    #process_stashes(stashes)
     ok 'Stashes have been processed'
   end
 

@@ -102,6 +102,7 @@ class CheckStash < Sensu::Plugin::Check::CLI
   def delete_stash(path)
     resource = "/stashes/#{path}"
     method = 'Delete'
+    res = api_request(resource, method)
     response?(res.code) ? (puts "STASH: #{resource} was deleted") : (warning "Deletion of #{resource} failed.")
   end
 
@@ -122,7 +123,7 @@ class CheckStash < Sensu::Plugin::Check::CLI
     File.open(file_name, 'w') do |file|
       file.write(JSON.pretty_generate(event))
     end
-     # puts event
+    puts [:client][:name]
 
     # ORANGE
     # sensu_master

@@ -17,7 +17,7 @@
 #
 # DEPENDENCIES:
 #   gem: sensu-plugin
-#   gem: json
+#   gem: jsoniS
 #
 # #YELLOW
 # needs example command
@@ -33,50 +33,35 @@
 #
 
 require 'sensu-plugin/check/cli'
+require 'sensu-plugins/utils'
 require 'net/https'
 require 'uri'
 require 'json'
+require 'time'
 
 class CheckStash < Sensu::Plugin::Check::CLI
-  option :api,
-         :short       => '-a URL',
-         :long        => '--api URL',
-         :description => 'sensu api url',
-         :default     => 'http://localhost:4567'
-
-  option :user,
-         :short       => '-u USER',
-         :long        => '--user USER',
-         :description => 'sensu api user',
-         :default     => 'admin'
-
-  option :password,
-         :short       => '-p PASSOWRD',
-         :long        => '--password PASSWORD',
-         :description => 'sensu api password',
-         :default     => 'password'
+  include Sensu::Plugin::Utils
 
   def api_request(resource, method)
-    uri = URI.parse(config[:api] + resource)
+    uri = URI.parse('https://localhost:4567' + resource)
     http = Net::HTTP.new(uri.host, uri.port)
-    puts 'this is the host name', uri.host
-    puts 'this is the port being used', uri.port
-    puts 'this is the uri scheme', uri.scheme
     http.read_timeout = 15
     http.open_timeout = 5
-    if uri.scheme == 'https'
-      http.use_ssl = true
-      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-    end
+    http.use_ssl = true
+    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
     case method
     when 'Get'
       req =  Net::HTTP::Get.new(uri.request_uri)
     when 'Delete'
       req =  Net::HTTP::Delete.new(uri.request_uri)
+    when 'Create'
+      req =  Net::HTTP::Post.new(uri.request_uri)
     end
-    req.basic_auth(config[:user], config[:password]) if config[:user] && config[:password]
-    puts 'this is the user', config[:user]
-    puts 'this is the password', config[:password]
+
+    sensu_creds
+    req.basic_auth(api_user, api_pwd)
+
     begin
       http.request(req)
     rescue Timeout::Error
@@ -88,18 +73,25 @@ class CheckStash < Sensu::Plugin::Check::CLI
       end
   end
 
-  # def acquire_stashes
-  #   resource = '/stashes'
-  #   method = 'Get'
-  #   res = api_request(resource, method)
-  #   response?(res.code) ? JSON.parse(res.body, :symbolize_names => true) : (warning 'Failed to get stashes')
-  # end
+  def create_stash(path)
+    resource = '/stashes/shutdown'
+    method = 'Create'
+    @data = {
+      "expire" => 60,
+      "path"=> "shutdown",
+      "content" => {
+        "client_name" => "#{path}"
+      }
+    }.to_json
+    puts @data
+    res = api_request(resource, method)
+    response?(res.code) ? JSON.parse(res.body, :symbolize_names => true) : (warning "Failed to create stash #{res.code}")
+    puts res.code
+  end
 
-  def response?(code)
+    def response?(code)
     case code
-    when '200'
-      true
-    when '204'
+    when '200', '202', '204'
       true
     else
       false
@@ -113,31 +105,17 @@ class CheckStash < Sensu::Plugin::Check::CLI
     response?(res.code) ? (puts "CLIENT: #{resource} was deleted") : (warning "Deletion of #{resource} failed.")
   end
 
-  # def process_stashes(stashes)
-  #  stashes.each do |s|
-  #    if s[:path].include?('api_call') && s[:content].value?('delete')
-  #      delete_stash(s[:path]) if s[:content][:timestamp].to_i < (Time.now.to_i + 60)
-  #    end
-  #  end
-  # end
-
-  # def sensu_master
-  # end
+  def sensu_creds
+    sensu_settings = settings
+    @api_user = settings['api']['user']
+    @api_pwd = sensu_settings['api']['password']
+  end
 
   def run
     event = JSON.parse(STDIN.read, :symbolize_names => true)
-    # file_name = "/tmp/sensu_#{event[:client][:name]}_#{event[:check][:name]}"
-    # File.open(file_name, 'w') do |file|
-    #  file.write(JSON.pretty_generate(event))
-    # end
-    # puts [:client][:name]
+    create_stash("#{event[:client][:name]}")
     delete_client("#{event[:client][:name]}")
     ok
-    # ORANGE
-    # sensu_master
-    # stashes = acquire_stashes
-    # process_stashes(stashes)
-    # ok "Stashes have been processed"
   end
 
 end

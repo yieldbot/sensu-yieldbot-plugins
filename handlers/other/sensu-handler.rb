@@ -77,10 +77,10 @@ class CheckStash < Sensu::Plugin::Check::CLI
     resource = '/stashes/shutdown'
     method = 'Create'
     @data = {
-      "expire" => 60,
-      "path"=> "shutdown",
-      "content" => {
-        "client_name" => "#{path}"
+      'expire' => 60,
+      'path'=> 'shutdown',
+      'content' => {
+        'client_name' => "#{path}"
       }
     }.to_json
     puts @data
@@ -89,7 +89,7 @@ class CheckStash < Sensu::Plugin::Check::CLI
     puts res.code
   end
 
-    def response?(code)
+  def response?(code)
     case code
     when '200', '202', '204'
       true

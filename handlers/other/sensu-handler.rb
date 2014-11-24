@@ -33,13 +33,12 @@
 #
 
 require 'sensu-plugin/check/cli'
-require 'sensu-plugins/utils'
+require 'sensu-plugin/utils'
 require 'net/https'
 require 'uri'
 require 'json'
-require 'time'
 
-class CheckStash < Sensu::Plugin::Check::CLI
+class SensuHandler < Sensu::Plugin::Check::CLI
   include Sensu::Plugin::Utils
 
   def api_request(resource, method)
@@ -60,17 +59,17 @@ class CheckStash < Sensu::Plugin::Check::CLI
     end
 
     sensu_creds
-    req.basic_auth(api_user, api_pwd)
+    req.basic_auth(@api_user, @api_pwd)
 
     begin
       http.request(req)
     rescue Timeout::Error
       puts 'HTTP request has timed out.'
       exit
-     rescue StandardError => e
-       puts "An HTTP error occurred. #{e}"
-       exit
-      end
+    rescue StandardError => e
+     puts "An HTTP error occurred. #{e}"
+     exit
+    end
   end
 
   def create_stash(path)

@@ -61,7 +61,7 @@ class SensuSocketClient < Sensu::Plugin::CLI
          :description => 'The status to use for the check.',
          :short       => '-s STATUS',
          :long        => '--status STATUS',
-         :default     => 3,
+         :default     => 0,
          :proc        => proc { |a| a.to_i }
 
   def run

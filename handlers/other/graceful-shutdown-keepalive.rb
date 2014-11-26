@@ -44,11 +44,11 @@ class GracefulShutdownKeepAliveHandler < Sensu::Handler
 
   def handle
     # Get the data we need to query the stash
-    client    = @event['client']['name'] 
+    client    = @event['client']['name']
     keyspace  = settings['graceful-shutdown']['keyspace']
 
     # Check if the graceful shutdown stash exists
-    if graceful_shutdown_stash_exists?(client,keyspace)
+    if graceful_shutdown_stash_exists?(client, keyspace)
       puts "[Graceful] Stash exists for #{keyspace}/#{client}.  Deleting client."
 
       # The stash exists, so we can delete the client

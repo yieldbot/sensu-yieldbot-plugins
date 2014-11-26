@@ -17,10 +17,7 @@
 #   gem: sensu-plugin
 #   gem: json
 #
-# #YELLOW
-# needs example command
 # EXAMPLES:
-#
 #
 # NOTES:
 #

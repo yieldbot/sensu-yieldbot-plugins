@@ -48,7 +48,7 @@ class GracefulShutdownHandler < Sensu::Handler
 
   def handle
     # Get the data we need to build the stash
-    client    = @event['client']['name'] 
+    client    = @event['client']['name']
     check     = @event['check']
     expires   = settings['graceful-shutdown']['expires']
     keyspace  = settings['graceful-shutdown']['keyspace']
@@ -60,7 +60,7 @@ class GracefulShutdownHandler < Sensu::Handler
     }
 
     # Create a stash for the node via the HTTP API
-    res = api_request(:POST, '/stashes') do |req|
+    api_request(:POST, '/stashes') do |req|
       req.body = body.to_json
     end
   end

@@ -44,13 +44,9 @@ class CheckSSH < Sensu::Plugin::Check::CLI
          long:        '--PORT PORT',
          default:     '22'
 
-  def socket_output
-    s = TCPSocket(hostname, port)
-    data = s.gets.chop
-  end
-
   def run
-    d = socket_output
-    critical unless d.include('SSH')
+    s = TCPSocket.open(config[:hostname], config[:port]).gets.chop
+    critical unless s.include?('SSH')
+    ok(s)
   end
 end

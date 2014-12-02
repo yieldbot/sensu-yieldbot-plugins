@@ -86,4 +86,8 @@ class SensuSocketClient < Sensu::Plugin::CLI
 
     ok
   end
+
+  def output(*args)
+    # Noop this function
+  end
 end

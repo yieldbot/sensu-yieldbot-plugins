@@ -25,6 +25,7 @@
 #     "graceful-shutdown": {
 #       "expires": 120,
 #       "keyspace": "graceful-shutdown",
+#       "remove_client": true,
 #     }
 #   }
 #
@@ -48,10 +49,11 @@ class GracefulShutdownHandler < Sensu::Handler
 
   def handle
     # Get the data we need to build the stash
-    client    = @event['client']['name']
-    check     = @event['check']
-    expires   = settings['graceful-shutdown']['expires']
-    keyspace  = settings['graceful-shutdown']['keyspace']
+    client        = @event['client']['name']
+    check         = @event['check']
+    expires       = settings['graceful-shutdown']['expires']
+    keyspace      = settings['graceful-shutdown']['keyspace']
+    remove_client = settings['graceful-shutdown']['remove_client']
 
     body = {
       'path'        => "#{keyspace}/#{client}",
@@ -63,5 +65,12 @@ class GracefulShutdownHandler < Sensu::Handler
     api_request(:POST, '/stashes') do |req|
       req.body = body.to_json
     end
+
+    # Remove the client (if configured to do so)
+    delete_sensu_client!(client) if remove_client
+  end
+
+  def delete_sensu_client!(client)
+    api_request(:DELETE, "/clients/#{client}")
   end
 end

@@ -38,11 +38,15 @@
 require 'sensu-handler'
 require 'json'
 
-# #YELLOW
-# class docs
+#
+# == Graceful Shutdown Keep Alive Handler
+#
 class GracefulShutdownKeepAliveHandler < Sensu::Handler
   def filter; end
 
+  # Get basic information from the system to be used
+  # to check if a stash exists and if so delete the client
+  #
   def handle
     # Get the data we need to query the stash
     client    = @event['client']['name']
@@ -60,10 +64,22 @@ class GracefulShutdownKeepAliveHandler < Sensu::Handler
     end
   end
 
+  # Delete the sensu client using an api request
+  #
+  # ==== Attributes
+  #
+  # * +client+ - the machine name to delete
   def delete_sensu_client!(client)
     api_request(:DELETE, "/clients/#{client}")
   end
 
+  # Determine if the graceful shutdown stash exists
+  # Will retuen TRUE if it does
+  #
+  # ==== Attributes
+  #
+  # * +client+ - the machine name to delete
+  # * +keyspace+ - the keysapce we wish to check for the client
   def graceful_shutdown_stash_exists?(client, keyspace)
     api_request(:GET, "/stashes/#{keyspace}/#{client}").code == '200'
   end

@@ -43,36 +43,45 @@
 require 'sensu-handler'
 require 'json'
 
-# #YELLOW
-# class docs
+#
+# == Graceful Shutdown Handler
+#
 class GracefulShutdownHandler < Sensu::Handler
   def filter; end
 
-  # #ORANGE
-  # method length
-  def handle
-    # Get the data we need to build the stash
-    client        = @event['client']['name']
+  # Get basic information from the system to be used
+  # to create a stash
+  def build_stash
+    @client       = @event['client']['name']
     check         = @event['check']
     expires       = settings['graceful-shutdown']['expires']
     keyspace      = settings['graceful-shutdown']['keyspace']
-    remove_client = settings['graceful-shutdown']['remove_client']
+    @remove_client = settings['graceful-shutdown']['remove_client']
 
-    body = {
-      'path'        => "#{keyspace}/#{client}",
+    @body = {
+      'path'        => "#{keyspace}/#{@client}",
       'expire'      => expires,
       'content'     => check
     }
+  end
 
-    # Create a stash for the node via the HTTP API
+  # Build the stash and delete the client if configured
+  # to do so
+  def handle
+    build_stash
     api_request(:POST, '/stashes') do |req|
-      req.body = body.to_json
+      req.body = @body.to_json
     end
 
     # Remove the client (if configured to do so)
-    delete_sensu_client!(client) if remove_client
+    delete_sensu_client!(@client) if @remove_client
   end
 
+  # Delete the sensu client using an api request
+  #
+  # ==== Attributes
+  #
+  # * +client+ - the machine name to delete
   def delete_sensu_client!(client)
     api_request(:DELETE, "/clients/#{client}")
   end

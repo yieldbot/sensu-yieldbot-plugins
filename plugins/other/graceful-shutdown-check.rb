@@ -33,10 +33,16 @@ require 'sensu-plugin/check/cli'
 require 'sensu-plugin/utils'
 require 'json'
 
+#
+# == Graceful Shutdown Check
+#
 class GracefulShutdownCheck < Sensu::Plugin::Check::CLI
   include Sensu::Plugin::Utils
 
-  def api_request(method, path, &blk)
+  # #YELLOW
+  # unused arg
+  # needs docs
+  def api_request(method, path, &blk) # rubocop:disable all
     http = Net::HTTP.new(settings['api']['host'], settings['api']['port'])
     req = net_http_req_class(method).new(path)
     if settings['api']['user'] && settings['api']['password']
@@ -46,11 +52,17 @@ class GracefulShutdownCheck < Sensu::Plugin::Check::CLI
     http.request(req)
   end
 
+  #
+  # #YELLOW
+  # needs docs
   def delete_sensu_client!(client)
     api_request(:DELETE, "/clients/#{client}")
   end
 
-  def graceful_clients
+  #
+  # #YELLOW
+  # needs docs
+  def graceful_clients # rubocop:disable Metrics/MethodLength
     keyspace = settings['graceful-shutdown']['keyspace']
 
     # Get a list of the stashes
@@ -58,15 +70,15 @@ class GracefulShutdownCheck < Sensu::Plugin::Check::CLI
 
     # Make sure we are able to retrieve the stathses
     critical 'Unable to retrieve stashes' if response.code != '200'
-    
+
     #
     all_stashes = JSON.parse(response.body)
 
     # Filter the stathes
     filtered_stashes = []
     all_stashes.each do |stash|
-      if match = stash['path'].match(/^#{keyspace}\/(.*)/)
-        filtered_stashes << match.captures[0]  
+      if match = stash['path'].match(/^#{keyspace}\/(.*)/) # rubocop:disable all
+        filtered_stashes << match.captures[0]
       end
     end
 

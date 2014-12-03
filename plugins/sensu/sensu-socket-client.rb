@@ -27,12 +27,14 @@
 #   for details.
 #
 
+require 'rubygems' if RUBY_VERSION < '1.9.0'
 require 'sensu-plugin/cli'
 require 'json'
 require 'socket'
 
-# #YELLOW
-# class docs
+#
+# == Sensu Socket Client
+#
 class SensuSocketClient < Sensu::Plugin::CLI
   option :name,
          description: 'The name to use for the check.',
@@ -66,9 +68,10 @@ class SensuSocketClient < Sensu::Plugin::CLI
          default: 0,
          proc: proc(&:to_i)
 
-  # #YELLOW
-  # method has too many lines
-  def run
+  # Send a JSON string to the local sensu client for transport
+  # to the sensu server
+  #
+  def run  # rubocop:disable Metrics/MethodLength
     data = {
       'name'      => config[:name],
       'type'      => config[:type],

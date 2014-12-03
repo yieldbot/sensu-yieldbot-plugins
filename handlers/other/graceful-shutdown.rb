@@ -40,6 +40,7 @@
 #   for details.
 #
 
+require 'rubygems' if RUBY_VERSION < '1.9.0'
 require 'sensu-handler'
 require 'json'
 

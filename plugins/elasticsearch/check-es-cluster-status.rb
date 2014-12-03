@@ -36,8 +36,9 @@ require 'sensu-plugin/check/cli'
 require 'rest-client'
 require 'json'
 
-# #YELLOW
-# class docs
+#
+# == Elastic Search Cluster Status
+#
 class ESClusterStatus < Sensu::Plugin::Check::CLI
   option :scheme,
          description: 'URI scheme',
@@ -55,7 +56,13 @@ class ESClusterStatus < Sensu::Plugin::Check::CLI
          short: '-p PORT',
          long: '--port PORT',
          default: '9200'
-
+  #
+  # Get an ES resource
+  #
+  # ==== Attributes
+  #
+  # * +resource+ - the path to pass into the rest client
+  #
   def get_es_resource(resource)
     r = RestClient::Resource.new("#{config[:scheme]}://#{config[:server]}:\
     #{config[:port]}/#{resource}", timeout: 45)
@@ -66,6 +73,8 @@ class ESClusterStatus < Sensu::Plugin::Check::CLI
     warning 'Connection timed out'
   end
 
+  # If the node an ES master it will return TRUE
+  #
   def master?
     state = get_es_resource("/_cluster/state?filter_routing_table=true&\
     filter_metadata=true&filter_indices=true&\
@@ -74,14 +83,20 @@ class ESClusterStatus < Sensu::Plugin::Check::CLI
     local['nodes'].keys.first == state['master_node']
   end
 
+  # Get the status of the ES node
+  #
   def find_status
     health = get_es_resource('/_cluster/health')
     health['status'].downcase
   end
 
-  # #YELLOW
-  # method too long
-  def run
+  # Determine if the node is a master node and if so
+  # get the cluster status, if not then opout
+  #
+  # [note]
+  # <b>Metrics/MethodLength</b> is disabled due to the method only
+  # having a single purpose
+  def run # rubocop:disable Metrics/MethodLength
     if master?
       case find_status
       when 'green'

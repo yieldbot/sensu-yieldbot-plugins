@@ -33,8 +33,9 @@ require 'rubygems' if RUBY_VERSION < '1.9.0'
 require 'sensu-plugin/check/cli'
 require 'tempfile'
 
-# #YELLOW
-# class docs
+#
+# == Check File System Writable
+#
 class CheckFSWritable < Sensu::Plugin::Check::CLI
   option :dir,
          description: 'Directory to check for writability',
@@ -51,12 +52,16 @@ class CheckFSWritable < Sensu::Plugin::Check::CLI
          description: 'Print debug statements',
          long: '--debug'
 
+  # Create the necessary variables inheriting from the previous calss
+  #
   def initialize
     super
     @crit_pt_proc = []
     @crit_pt_test = []
   end
 
+  # Send the proper exit codes and output
+  #
   def usage_summary
     if @crit_pt_test.empty? && @crit_pt_proc.empty?
       ok 'All filesystems are writable'
@@ -66,6 +71,8 @@ class CheckFSWritable < Sensu::Plugin::Check::CLI
     end
   end
 
+  # Grab all the VolGroup mount points in the self namespace
+  #
   def find_mnt_pts
     `grep VolGroup /proc/self/mounts \
     | awk '{print $2, $4}' | awk -F, '{print $1}' | awk '{print $1, $2}'`
@@ -73,12 +80,25 @@ class CheckFSWritable < Sensu::Plugin::Check::CLI
     # | awk '{print $2, $4}' | awk -F, '{print $1}' | awk '{print $1, $2}'`
   end
 
+  # Test if all mount points are listed as read/write by proc
+  #
+  # ==== Attributes
+  #
+  # * +mount_info+ - an array containing all mount points listed in self
+  #
   def rw_in_proc?(mount_info)
     mount_info.each  do |pt|
       @crit_pt_proc <<  "#{ pt.split[0] }" if pt.split[1] != 'rw'
     end
   end
 
+  # Test if all mount points are read/write by writing a file and then
+  # reading it back
+  #
+  # ==== Attributes
+  #
+  # * +mount_info+ - an array containing all mount points listed in self
+  #
   def rw_test?(mount_info)
     mount_info.each do |pt|
       (Dir.exist? pt.split[0]) || (@crit_pt_test << "#{ pt.split[0] }")
@@ -93,6 +113,9 @@ class CheckFSWritable < Sensu::Plugin::Check::CLI
     end
   end
 
+  # This will read all VolGroups from the self namespace and
+  # then run the necessary tests against them.
+  #
   def auto_discover
     # #YELLOW
     # this will only work for a single namespace as of now
@@ -110,6 +133,9 @@ class CheckFSWritable < Sensu::Plugin::Check::CLI
     are: #{ @crit_pt_test }" if config[:debug]
   end
 
+  # This will read in the array of directories to test and then
+  # attempt to write a file to each and then read it back
+  #
   def manual_test
     config[:dir].each do |d|
       (Dir.exist? d) || (@crit_pt_test << "#{ d }")
@@ -124,9 +150,11 @@ class CheckFSWritable < Sensu::Plugin::Check::CLI
     end
   end
 
+  # If the auto flag is present then run auto_discover
+  # If directories are given then run manual_test
+  # If not is given or unknown options are used fail gracefully
+  #
   def run
-    # #YELLOW
-    # line length
     (auto_discover if config[:auto]) || (manual_test if config[:dir]) || \
     (warning 'No directorties to check')
     usage_summary

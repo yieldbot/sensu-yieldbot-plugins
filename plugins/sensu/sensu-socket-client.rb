@@ -71,7 +71,7 @@ class SensuSocketClient < Sensu::Plugin::CLI
   # Send a JSON string to the local sensu client for transport
   # to the sensu server
   #
-  def run  # rubocop:disable Metrics/MethodLength
+  def run  # rubocop:disable MethodLength
     data = {
       'name'      => config[:name],
       'type'      => config[:type],

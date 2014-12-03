@@ -96,7 +96,7 @@ class ESClusterStatus < Sensu::Plugin::Check::CLI
   # [note]
   # <b>Metrics/MethodLength</b> is disabled due to the method only
   # having a single purpose
-  def run # rubocop:disable Metrics/MethodLength
+  def run # rubocop:disable MethodLength
     if master?
       case find_status
       when 'green'

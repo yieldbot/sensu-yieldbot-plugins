@@ -103,7 +103,7 @@ class CheckFSWritable < Sensu::Plugin::Check::CLI
     mount_info.each do |pt|
       (Dir.exist? pt.split[0]) || (@crit_pt_test << "#{ pt.split[0] }")
       file = Tempfile.new('.sensu', pt.split[0])
-      puts "The temp file being written to is: #{ file.path }" if config[:debug]
+      puts "The temp file being written to: #{ file.path }" if config[:debug]
       # #YELLOW
       #  need to add a check here to validate permissions, if none it pukes
       file.write('mops') || @crit_pt_test <<  "#{ pt.split[0] }"
@@ -140,7 +140,7 @@ class CheckFSWritable < Sensu::Plugin::Check::CLI
     config[:dir].each do |d|
       (Dir.exist? d) || (@crit_pt_test << "#{ d }")
       file = Tempfile.new('.sensu', d)
-      puts "The temp file being written to is: #{ file.path }" if config[:debug]
+      puts "The temp file being written to: #{ file.path }" if config[:debug]
       # #YELLOW
       #  need to add a check here to validate permissions, if none it pukes
       file.write('mops') || @crit_pt_test <<  "#{ d }"

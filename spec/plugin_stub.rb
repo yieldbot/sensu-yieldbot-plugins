@@ -3,11 +3,17 @@ shared_context :plugin_stub do
   # XXX: code-under-test from being run at the end of the rspec suite.
   before(:all) do
     Sensu::Plugin::CLI.class_eval do
+      # #YELLOW
+      # class docs
       class PluginStub
         def run; end
+
         def ok(*); end
+
         def warning(*); end
+
         def critical(*); end
+
         def unknown(*); end
       end
       # rubocop:disable all

@@ -46,11 +46,11 @@ if File.exist? '/proc/mdstat'
     @raid_data = f.read.split(/(md[0-9]*)/)
   end
 else
- puts '/proc/mdstat is not present'
- exit(exit_code)
+  puts '/proc/mdstat is not present'
+  exit(exit_code)
 end
 
-h = Hash.new
+h = {}
 n = 0
 k = ''
 v = ''
@@ -76,7 +76,7 @@ h.each do |key, value|
                #{total_dev} total devices
                #{working_dev} working devices
                #{failed_dev} failed devices"
-  # OPTIMIXE
+  # YELLOW
   #   this should/can be written as a switch statement
   if raid_state == 'active' && working_dev >= total_dev && !recovery_state
     puts line_out

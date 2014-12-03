@@ -38,8 +38,9 @@
 require 'sensu-handler'
 require 'json'
 
+# #YELLOW
+# class docs
 class GracefulShutdownKeepAliveHandler < Sensu::Handler
-
   def filter; end
 
   def handle
@@ -49,7 +50,8 @@ class GracefulShutdownKeepAliveHandler < Sensu::Handler
 
     # Check if the graceful shutdown stash exists
     if graceful_shutdown_stash_exists?(client, keyspace)
-      puts "[Graceful] Stash exists for #{keyspace}/#{client}.  Deleting client."
+      puts "[Graceful] Stash exists for #{keyspace}/#{client}.  \
+      Deleting client."
 
       # The stash exists, so we can delete the client
       delete_sensu_client!(client)

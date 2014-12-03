@@ -33,46 +33,45 @@
 require 'rubygems' if RUBY_VERSION < '1.9.0'
 require 'sensu-plugin/check/cli'
 
+# #YELLOW
+# class docs
 class CheckInode < Sensu::Plugin::Check::CLI
-
   option :fstype,
-         :short => '-t TYPE',
-         :proc => proc { |a| a.split(',') }
+         short: '-t TYPE',
+         proc: proc { |a| a.split(',') }
 
   option :ignoretype,
-         :short => '-x TYPE',
-         :proc => proc { |a| a.split(',') }
+         short: '-x TYPE',
+         proc: proc { |a| a.split(',') }
 
   option :ignoremnt,
-         :short => '-i MNT',
-         :proc => proc { |a| a.split(',') }
+         short: '-i MNT',
+         proc: proc { |a| a.split(',') }
 
   option :ignoreline,
-         :short => '-l PATTERN[,PATTERN]',
-         :description => 'Ignore df line(s) matching pattern(s)',
-         :proc => proc { |a| a.split(',') }
+         short: '-l PATTERN[,PATTERN]',
+         description: 'Ignore df line(s) matching pattern(s)',
+         proc: proc { |a| a.split(',') }
 
   option :includeline,
-         :short => '-L PATTERN[,PATTERN]',
-         :description => 'Only include df line(s) matching pattern(s)',
-         :proc => proc { |a| a.split(',') }
+         short: '-L PATTERN[,PATTERN]',
+         description: 'Only include df line(s) matching pattern(s)',
+         proc: proc { |a| a.split(',') }
 
   option :warn,
-         :short => '-w PERCENT',
-         # #YELLOW
-         :proc => proc { |a| a.to_i },
-         :default => 80
+         short: '-w PERCENT',
+         proc: proc(&:to_i),
+         default: 80
 
   option :crit,
-         :short => '-c PERCENT',
-         # #YELLOW
-         :proc => proc { |a| a.to_i },
-         :default => 90
+         short: '-c PERCENT',
+         proc: proc(&:to_i),
+         default: 90
 
   option :debug,
-         :short => '-d',
-         :long => '--debug',
-         :description => 'Output list of included filesystems'
+         short: '-d',
+         long: '--debug',
+         description: 'Output list of included filesystems'
 
   def initialize
     super
@@ -82,14 +81,19 @@ class CheckInode < Sensu::Plugin::Check::CLI
   end
 
   # #YELLOW
+  # method has multiple issues
   def read_inode_pct
     `df -iPT`.split("\n").drop(1).each do |line|
       begin
         _fs, type, _blocks, _used, _avail, inode_usage, mnt = line.split
+        # #YELLOW
+        # line length
         next if config[:includeline] && !config[:includeline].find { |x| line.match(x) }
         next if config[:fstype] && !config[:fstype].include?(type)
         next if config[:ignoretype] && config[:ignoretype].include?(type)
         next if config[:ignoremnt] && config[:ignoremnt].include?(mnt)
+        # #YELLOW
+        # line length
         next if config[:ignoreline] && config[:ignoreline].find { |x| line.match(x) }
         puts line if config[:debug]
       rescue
@@ -118,5 +122,4 @@ class CheckInode < Sensu::Plugin::Check::CLI
     warning usage_summary unless @warn_fs.empty?
     ok "All inode usage under #{config[:warn]}%"
   end
-
 end

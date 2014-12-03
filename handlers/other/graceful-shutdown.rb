@@ -43,10 +43,13 @@
 require 'sensu-handler'
 require 'json'
 
+# #YELLOW
+# class docs
 class GracefulShutdownHandler < Sensu::Handler
-
   def filter; end
 
+  # #ORANGE
+  # method length
   def handle
     # Get the data we need to build the stash
     client        = @event['client']['name']

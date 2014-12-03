@@ -7,4 +7,4 @@ end
 
 Rubocop::RakeTask.new
 
-task :default => [:spec, :rubocop]
+task default: [:spec, :rubocop]

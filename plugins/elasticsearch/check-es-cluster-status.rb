@@ -36,50 +36,54 @@ require 'sensu-plugin/check/cli'
 require 'rest-client'
 require 'json'
 
+# #YELLOW
+# class docs
 class ESClusterStatus < Sensu::Plugin::Check::CLI
-
   option :scheme,
-         :description => 'URI scheme',
-         :long => '--scheme SCHEME',
-         :default => 'http'
+         description: 'URI scheme',
+         long: '--scheme SCHEME',
+         default: 'http'
 
   option :server,
-         :description => 'Elasticsearch server',
-         :short => '-s SERVER',
-         :long => '--server SERVER',
-         :default => 'localhost'
+         description: 'Elasticsearch server',
+         short: '-s SERVER',
+         long: '--server SERVER',
+         default: 'localhost'
 
   option :port,
-         :description => 'Port',
-         :short => '-p PORT',
-         :long => '--port PORT',
-         :default => '9200'
+         description: 'Port',
+         short: '-p PORT',
+         long: '--port PORT',
+         default: '9200'
 
   def get_es_resource(resource)
-    begin
-      r = RestClient::Resource.new("#{config[:scheme]}://#{config[:server]}:#{config[:port]}/#{resource}", :timeout => 45)
-      JSON.parse(r.get)
-    rescue Errno::ECONNREFUSED
-      warning 'Connection refused'
-    rescue RestClient::RequestTimeout
-      warning 'Connection timed out'
-    end
+    r = RestClient::Resource.new("#{config[:scheme]}://#{config[:server]}:\
+    #{config[:port]}/#{resource}", timeout: 45)
+    JSON.parse(r.get)
+  rescue Errno::ECONNREFUSED
+    warning 'Connection refused'
+  rescue RestClient::RequestTimeout
+    warning 'Connection timed out'
   end
 
-  def is_master
-    state = get_es_resource('/_cluster/state?filter_routing_table=true&filter_metadata=true&filter_indices=true&filter_blocks=true&filter_nodes=true')
+  def master?
+    state = get_es_resource("/_cluster/state?filter_routing_table=true&\
+    filter_metadata=true&filter_indices=true&\
+    filter_blocks=true&filter_nodes=true")
     local = get_es_resource('/_nodes/_local')
     local['nodes'].keys.first == state['master_node']
   end
 
-  def get_status
+  def find_status
     health = get_es_resource('/_cluster/health')
     health['status'].downcase
   end
 
+  # #YELLOW
+  # method too long
   def run
-    if is_master
-      case get_status
+    if master?
+      case find_status
       when 'green'
         ok 'Cluster is green'
       when 'yellow'
@@ -91,5 +95,4 @@ class ESClusterStatus < Sensu::Plugin::Check::CLI
       ok 'Not the master'
     end
   end
-
 end

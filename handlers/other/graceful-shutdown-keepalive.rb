@@ -11,7 +11,7 @@
 #   plain-text
 #
 # PLATFORMS:
-#   all
+#   Linux
 #
 # DEPENDENCIES:
 #   gem: sensu-handler
@@ -24,7 +24,7 @@
 #     }
 #   }
 #
-# EXAMPLES:
+# USAGE:
 #
 #
 # NOTES:

@@ -11,13 +11,13 @@
 #   plain-text
 #
 # PLATFORMS:
-#   all
+#   Linux
 #
 # DEPENDENCIES:
 #   gem: sensu-plugin
 #   gem: json
 #
-# EXAMPLES:
+# USAGE:
 #
 # NOTES:
 #

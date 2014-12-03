@@ -9,13 +9,13 @@
 #   plain-text
 #
 # PLATFORMS:
-#   all
+#   Linux
 #
 # DEPENDENCIES:
 #   gem: socket
 #   gem: sensu-plugin
 #
-# EXAMPLES:
+# USAGE:
 #   check-ssh.rb -h <hostname> -p port
 #
 # NOTES:

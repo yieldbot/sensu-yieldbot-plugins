@@ -9,7 +9,7 @@
 #   to reduce the chance of a keepalive handler firing for them.
 #
 # PLATFORMS:
-#   all
+#   Linux
 #
 # DEPENDENCIES:
 #   gem: sensu-plugin
@@ -39,9 +39,14 @@ require 'json'
 class GracefulShutdownCheck < Sensu::Plugin::Check::CLI
   include Sensu::Plugin::Utils
 
-  # #YELLOW
-  # unused arg
-  # needs docs
+  # Make an api request to the sensu api
+  #
+  # ==== Attributes
+  #
+  # * +method+ - the type of request: POST, GET, etc
+  # * +path+ - the path of the api request
+  # * +&blk+ - ?
+  #
   def api_request(method, path, &blk) # rubocop:disable all
     http = Net::HTTP.new(settings['api']['host'], settings['api']['port'])
     req = net_http_req_class(method).new(path)
@@ -52,23 +57,26 @@ class GracefulShutdownCheck < Sensu::Plugin::Check::CLI
     http.request(req)
   end
 
+  # This will delete the Sensu client if requested
   #
-  # #YELLOW
-  # needs docs
+  # ==== Attributes
+  #
+  # * +client+ - the client to remove from the dashboard
+  #
   def delete_sensu_client!(client)
     api_request(:DELETE, "/clients/#{client}")
   end
 
+  # Get the stashes and check to see if they have a graceful shutdown stash
+  # associated with them
   #
-  # #YELLOW
-  # needs docs
   def graceful_clients # rubocop:disable Metrics/MethodLength
     keyspace = settings['graceful-shutdown']['keyspace']
 
     # Get a list of the stashes
     response = api_request(:GET, '/stashes')
 
-    # Make sure we are able to retrieve the stathses
+    # Make sure we are able to retrieve the stashes
     critical 'Unable to retrieve stashes' if response.code != '200'
 
     #
@@ -85,6 +93,8 @@ class GracefulShutdownCheck < Sensu::Plugin::Check::CLI
     filtered_stashes
   end
 
+  # If a client has a graceful shutdown stash then remove it
+  #
   def run
     graceful_clients.each do |client|
       delete_sensu_client!(client)

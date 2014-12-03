@@ -10,15 +10,15 @@
 #   plain-text
 #
 # PLATFORMS:
-#   all
+#   Linux
 #
 # DEPENDENCIES:
 #   gem: sensu-plugin
 #   gem: tempfile
 #
 # #YELLOW
-# needs example command
-# EXAMPLES:
+# needs usage
+# USAGE:
 #
 #
 # NOTES:

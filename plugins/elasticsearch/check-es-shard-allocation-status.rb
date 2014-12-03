@@ -11,15 +11,15 @@
 #   plain-text
 #
 # PLATFORMS:
-#   all
+#   Linux
 #
 # DEPENDENCIES:
 #   gem: sensu-plugin
 #   gem: rest-client
 #
 # #YELLOW
-# needs example command
-# EXAMPLES:
+# needs usage
+# USAGE:
 #
 #
 # NOTES:

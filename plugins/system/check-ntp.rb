@@ -33,11 +33,13 @@ class CheckNTP < Sensu::Plugin::Check::CLI
 
   option :warn,
          short: '-w WARN',
+         long:  '--warn WARN',
          proc: proc(&:to_i),
          default: 10
 
   option :crit,
          short: '-c CRIT',
+         long:  '--crit CRIT',
          proc: proc(&:to_i),
          default: 100
 

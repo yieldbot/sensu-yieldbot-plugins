@@ -64,11 +64,6 @@ class CheckESClusterIndex < Sensu::Plugin::Check::CLI
 
     valid_index = {}
     dupe_index = {}
-
-    # file_list = ['events', 'agg', 'config']
-    # file_list.each do |u|
-    #  input = File.open(u, 'r')
-    #  index_arr = input.read.split("\n")
     config[:cluster].each do |u|
       index_arr = `curl -s #{ u }#{ port }#{ cmd }`.split("\n")
       index_arr.each do |t|

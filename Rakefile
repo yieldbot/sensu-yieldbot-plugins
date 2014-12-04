@@ -1,6 +1,6 @@
 require 'rspec/core/rake_task'
 require 'rubocop/rake_task'
-require 'rake/rdoctask'
+require 'rdoc/task'
 
 RSpec::Core::RakeTask.new(:spec) do |r|
   r.pattern = FileList['**/**/*_spec.rb']

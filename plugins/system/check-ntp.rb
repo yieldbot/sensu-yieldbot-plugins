@@ -29,6 +29,9 @@
 require 'rubygems' if RUBY_VERSION < '1.9.0'
 require 'sensu-plugin/check/cli'
 
+#
+# == Check NTP
+#
 class CheckNTP < Sensu::Plugin::Check::CLI
 
   option :warn,
@@ -43,6 +46,9 @@ class CheckNTP < Sensu::Plugin::Check::CLI
          proc: proc(&:to_i),
          default: 100
 
+  # Use ntpq to calculate the offset and compare it to the
+  # postive and negative threshold values
+  #
   def run
     begin
       offset = `ntpq -c "rv 0 offset"`.split('=')[1].strip.to_f

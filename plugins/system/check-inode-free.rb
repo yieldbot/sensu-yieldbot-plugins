@@ -97,9 +97,9 @@ class CheckInode < Sensu::Plugin::Check::CLI
       end
       @line_count += 1
       if inode_usage.to_i >= config[:crit]
-        @crit_fs << "#{mnt} #{capacity}"
+        @crit_fs << "#{mnt} #{inode_usage.to_i}"
       elsif inode_usage.to_i >= config[:warn]
-        @warn_fs <<  "#{mnt} #{capacity}"
+        @warn_fs <<  "#{mnt} #{inode_usage.to_i}"
       end
     end
   end

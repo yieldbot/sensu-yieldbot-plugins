@@ -46,7 +46,7 @@ class CheckSSH < Sensu::Plugin::Check::CLI
          long:        '--PORT PORT',
          default:     '22'
 
-  # OPen a socket to the host and port specified and return back the
+  # Open a socket to the host and port specified and return back the
   # header.  If the header doesn't contain the sting then crit, else ok
   #
   def run

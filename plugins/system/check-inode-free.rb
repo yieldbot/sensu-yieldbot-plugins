@@ -12,14 +12,14 @@
 #   plain-text
 #
 # PLATFORMS:
-#   all
+#   Linux
 #
 # DEPENDENCIES:
 #   gem: sensu-plugin
 #
 # #YELLOW
-# needs example command
-# EXAMPLES:
+# needs usage
+# USAGE:
 #
 #
 # NOTES:
@@ -33,47 +33,54 @@
 require 'rubygems' if RUBY_VERSION < '1.9.0'
 require 'sensu-plugin/check/cli'
 
+#
+# == Check Inode
+#
 class CheckInode < Sensu::Plugin::Check::CLI
-
   option :fstype,
-         :short => '-t TYPE',
-         :proc => proc { |a| a.split(',') }
+         short: '-t TYPE',
+         proc: proc { |a| a.split(',') },
+         description: '?' # #YELLOW
 
   option :ignoretype,
-         :short => '-x TYPE',
-         :proc => proc { |a| a.split(',') }
+         short: '-x TYPE',
+         proc: proc { |a| a.split(',') },
+         description: '?' # #YELLOW
 
   option :ignoremnt,
-         :short => '-i MNT',
-         :proc => proc { |a| a.split(',') }
+         short: '-i MNT',
+         proc: proc { |a| a.split(',') },
+         description: '?' # #YELLOW
 
   option :ignoreline,
-         :short => '-l PATTERN[,PATTERN]',
-         :description => 'Ignore df line(s) matching pattern(s)',
-         :proc => proc { |a| a.split(',') }
+         short: '-l PATTERN[,PATTERN]',
+         description: 'Ignore df line(s) matching pattern(s)',
+         proc: proc { |a| a.split(',') }
 
   option :includeline,
-         :short => '-L PATTERN[,PATTERN]',
-         :description => 'Only include df line(s) matching pattern(s)',
-         :proc => proc { |a| a.split(',') }
+         short: '-L PATTERN[,PATTERN]',
+         description: 'Only include df line(s) matching pattern(s)',
+         proc: proc { |a| a.split(',') }
 
   option :warn,
-         :short => '-w PERCENT',
-         # #YELLOW
-         :proc => proc { |a| a.to_i },
-         :default => 80
+         short: '-w PERCENT',
+         proc: proc(&:to_i),
+         default: 80,
+         description: '?' # #YELLOW
 
   option :crit,
-         :short => '-c PERCENT',
-         # #YELLOW
-         :proc => proc { |a| a.to_i },
-         :default => 90
+         short: '-c PERCENT',
+         proc: proc(&:to_i),
+         default: 90,
+         description: '?' # #YELLOW
 
   option :debug,
-         :short => '-d',
-         :long => '--debug',
-         :description => 'Output list of included filesystems'
+         short: '-d',
+         long: '--debug',
+         description: 'Output list of included filesystems'
 
+  # Create the necessary variables inheriting from the previous calss
+  #
   def initialize
     super
     @crit_fs = []
@@ -81,16 +88,28 @@ class CheckInode < Sensu::Plugin::Check::CLI
     @line_count = 0
   end
 
-  # #YELLOW
-  def read_inode_pct
+  # Use the unix utility <i>df</i> to read the percentage
+  # of disk inode usage
+  #
+  # ==== Options
+  #
+  # * +includeline+ - Only include df line(s) matching pattern(s)
+  # * +fstype+ - ?
+  # * +ignoretype+ - ?
+  # * +ignoremnt+ - ?
+  # * +ignoreline+ - Ignore df line(s) matching pattern(s)
+  #
+  def read_inode_pct # rubocop:disable all
     `df -iPT`.split("\n").drop(1).each do |line|
       begin
         _fs, type, _blocks, _used, _avail, inode_usage, mnt = line.split
-        next if config[:includeline] && !config[:includeline].find { |x| line.match(x) }
+        next if config[:includeline] && !config[:includeline]
+        .find { |x| line.match(x) }
         next if config[:fstype] && !config[:fstype].include?(type)
         next if config[:ignoretype] && config[:ignoretype].include?(type)
         next if config[:ignoremnt] && config[:ignoremnt].include?(mnt)
-        next if config[:ignoreline] && config[:ignoreline].find { |x| line.match(x) }
+        next if config[:ignoreline] && config[:ignoreline]
+        .find { |x| line.match(x) }
         puts line if config[:debug]
       rescue
         unknown "malformed line from df: #{line}"
@@ -104,10 +123,15 @@ class CheckInode < Sensu::Plugin::Check::CLI
     end
   end
 
+  # Send the proper exit codes and output
+  #
   def usage_summary
     (@crit_fs + @warn_fs).join(', ')
   end
 
+  # Read the inode percentage and give the correct exit codes based upon that
+  # output
+  #
   def run
     if config[:includeline] && config[:ignoreline]
       unknown 'Do not use -l and -L options concurrently'
@@ -118,5 +142,4 @@ class CheckInode < Sensu::Plugin::Check::CLI
     warning usage_summary unless @warn_fs.empty?
     ok "All inode usage under #{config[:warn]}%"
   end
-
 end

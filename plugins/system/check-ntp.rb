@@ -10,7 +10,7 @@
 #   plain-text
 #
 # PLATFORMS:
-#   all
+#   Linux
 #
 # DEPENDENCIES:
 #   gem: sensu-plugin
@@ -33,7 +33,6 @@ require 'sensu-plugin/check/cli'
 # == Check NTP
 #
 class CheckNTP < Sensu::Plugin::Check::CLI
-
   option :warn,
          short: '-w WARN',
          long:  '--warn WARN',
@@ -49,16 +48,19 @@ class CheckNTP < Sensu::Plugin::Check::CLI
   # Use ntpq to calculate the offset and compare it to the
   # postive and negative threshold values
   #
-  def run
+  def run # rubocop:disable all
     begin
       offset = `ntpq -c "rv 0 offset"`.split('=')[1].strip.to_f
     rescue
       unknown 'NTP command Failed'
     end
 
-    critical if offset >= config[:crit] || offset <= -config[:crit]
-    warning if offset >= config[:warn] || offset <= -config[:warn]
+    critical("The offset of #{ offset } is greater than the critical \
+    value of #{ config[:crit] }") if offset >= config[:crit] \
+    || offset <= -config[:crit]
+    warning("The offset of #{ offset } is greater than the warning \
+    value of #{ config[:warn] }") if offset >= config[:warn] \
+    || offset <= -config[:warn]
     ok
-
   end
 end

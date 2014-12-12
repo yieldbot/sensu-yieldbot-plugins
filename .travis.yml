@@ -5,7 +5,7 @@ rvm:
 notifications:
   email:
     recipients:
-      - devops@yieldbot.com
+      - mattjones@yieldbot.com
     on_success: change
     on_failure: always
 

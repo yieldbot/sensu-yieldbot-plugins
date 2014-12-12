@@ -14,4 +14,7 @@ md3 : active raid5 sdl1[9] sdk1[8] sdj1[7] sdi1[6] sdh1[5] sdg1[4] sdf1[3] sde1[
       1318680576 blocks level 5, 1024k chunk, algorithm 2 [10/10] [UUUUUUUUUU]
 
 md0 : active raid5 sda1[0] sdd1[2] sdb1[1]
-     1465151808 blocks level 5, 64k chunk, algorithm 2 [4/3] [UUU_]
+      1465151808 blocks level 5, 64k chunk, algorithm 2 [4/3] [UUU_]
+
+md4 : active raid0 xvdm[3] xvdl[2] xvdk[1] xvdj[0]
+      419430144 blocks 16k chunks

@@ -9,13 +9,13 @@
 #   plain-text
 #
 # PLATFORMS:
-#   all
+#   Linux
 #
 # DEPENDENCIES:
 #   gem: socket
 #   gem: sensu-plugin
 #
-# EXAMPLES:
+# USAGE:
 #   check-ssh.rb -h <hostname> -p port
 #
 # NOTES:
@@ -30,8 +30,10 @@ require 'rubygems' if RUBY_VERSION < '1.9.0'
 require 'sensu-plugin/check/cli'
 require 'socket'
 
+#
+# == Check SSH
+#
 class CheckSSH < Sensu::Plugin::Check::CLI
-
   option :hostname,
          description: 'The host you wish to connect to',
          short:       '-h HOSTNAME',
@@ -44,6 +46,9 @@ class CheckSSH < Sensu::Plugin::Check::CLI
          long:        '--PORT PORT',
          default:     '22'
 
+  # OPen a socket to the host and port specified and return back the
+  # header.  If the header doesn't contain the sting then crit, else ok
+  #
   def run
     s = TCPSocket.open(config[:hostname], config[:port]).gets.chop
     critical unless s.include?('SSH')

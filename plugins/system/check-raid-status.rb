@@ -67,9 +67,9 @@ end
 
 h.each do |key, value|
   raid_state = value.split[1]
-  total_dev = value.match(/[0-9]*\/[0-9]*/).to_s[0]
-  working_dev = value.match(/[0-9]*\/[0-9]*/).to_s[2]
-  failed_dev = value.match(/\[[U,_]*\]/).to_s.count '_'
+  total_dev = value.match(/[0-9]*\/[0-9]*/).to_s[0] || 0
+  working_dev = value.match(/[0-9]*\/[0-9]*/).to_s[2] || 0
+  failed_dev = value.match(/\[[U,_]*\]/).to_s.count '_' || 0
   recovery_state = value.include? 'recovery'
 
   line_out =  "#{key} is #{raid_state}

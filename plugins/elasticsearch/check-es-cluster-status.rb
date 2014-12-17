@@ -64,8 +64,7 @@ class ESClusterStatus < Sensu::Plugin::Check::CLI
   # * +resource+ - the path to pass into the rest client
   #
   def get_es_resource(resource)
-    r = RestClient::Resource.new("#{config[:scheme]}://#{config[:server]}:\
-    #{config[:port]}/#{resource}", timeout: 45)
+    r = RestClient::Resource.new("#{config[:scheme]}://#{config[:server]}:#{config[:port]}/#{resource}", timeout: 45)
     JSON.parse(r.get)
   rescue Errno::ECONNREFUSED
     warning 'Connection refused'
@@ -76,9 +75,7 @@ class ESClusterStatus < Sensu::Plugin::Check::CLI
   # If the node an ES master it will return TRUE
   #
   def master?
-    state = get_es_resource("/_cluster/state?filter_routing_table=true&\
-    filter_metadata=true&filter_indices=true&\
-    filter_blocks=true&filter_nodes=true")
+    state = get_es_resource("/_cluster/state?filter_routing_table=true&filter_metadata=true&filter_indices=true&filter_blocks=true&filter_nodes=true")
     local = get_es_resource('/_nodes/_local')
     local['nodes'].keys.first == state['master_node']
   end

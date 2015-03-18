@@ -35,9 +35,6 @@ class UPdateLutPubInfoCheck < Sensu::Plugin::Check::CLI
     http.request(req)
   end
 
-  # Get the stashes and check to see if they have a graceful shutdown stash
-  # associated with them
-  #
   def lut_pub_info # rubocop:disable Metrics/MethodLength
     keyspace = 'update_lut_pub_info'
 

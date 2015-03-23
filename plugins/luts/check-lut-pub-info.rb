@@ -58,8 +58,8 @@ class UPdateLutPubInfoCheck < Sensu::Plugin::Check::CLI
   def run
   lut_pub_info
   t = Time.now.to_i
-  critical "Lut Pub Update finished over #{ config[:critical] } seconds ago" unless t - @stash['last_finish'].to_i < config[:critical]
-  warning "Lut Pub Update finished over #{ config[:warning] }" unless t - @stash['last_finish'].to_i < config[:warning]
+  critical "Lut Pub Update finished over #{ config[:critical] } seconds ago" unless t - @stash['last_finish'].to_i < config[:critical].to_i
+  warning "Lut Pub Update finished over #{ config[:warning] }" unless t - @stash['last_finish'].to_i < config[:warning].to_i
   ok
   end
 end

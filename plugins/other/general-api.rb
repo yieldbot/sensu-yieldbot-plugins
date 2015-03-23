@@ -20,7 +20,6 @@ class SensuApiHandler < Sensu::Handler
       'content'     => check
     }
 
-    end
     # Create a stash for the node via the HTTP API
     api_request(:POST, '/stashes') do |req|
       req.body = body.to_json

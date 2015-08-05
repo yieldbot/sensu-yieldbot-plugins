@@ -65,7 +65,7 @@ class MesosAppMetrics < Sensu::Plugin::Metric::CLI::Graphite
     #
     app    = config[:app] || # store failuers here
              #
-             failures = []
+    @failures = []
 
     # break out if the client fails to connect to the mesos master
     # this will not error on returned data just on socket issues
@@ -73,12 +73,12 @@ class MesosAppMetrics < Sensu::Plugin::Metric::CLI::Graphite
     begin
         r = RestClient::Resource.new("https://#{server}:#{port}/v2/apps/#{app}", timeout: 10, verify_ssl: false).get
         if r.code != 200
-          failures << "#{server} returned a #{r.code} status code"
+          @failures << "#{server} returned a #{r.code} status code"
         end
       rescue Errno::ECONNREFUSED, RestClient::ResourceNotFound, SocketError
-        failures << "#{server} connection was refused"
+        @failures << "#{server} connection was refused"
       rescue RestClient::RequestTimeout
-        failures << "#{server} connection timed out"
+        @failures << "#{server} connection timed out"
       end
     JSON.parse(r)['app']['tasks'][0]['host']
   end
@@ -92,7 +92,7 @@ class MesosAppMetrics < Sensu::Plugin::Metric::CLI::Graphite
 
   def run
     current_slave = acquire_app_slave
-    crticial failures unless failures == []
+    crticial @failures unless @failures == []
     puts acquire_metrics(current_slave)
     ok
   end

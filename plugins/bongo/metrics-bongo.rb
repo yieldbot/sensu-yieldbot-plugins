@@ -65,7 +65,7 @@ class MesosAppMetrics < Sensu::Plugin::Metric::CLI::Graphite
     #
     app    = config[:app] || # store failuers here
              #
-    @failures = []
+             @failures = []
 
     # break out if the client fails to connect to the mesos master
     # this will not error on returned data just on socket issues
@@ -92,8 +92,8 @@ class MesosAppMetrics < Sensu::Plugin::Metric::CLI::Graphite
 
   def run
     current_slave = acquire_app_slave
-    crticial @failures unless @failures == []
-    puts acquire_metrics(current_slave)
+    critical @failures unless @failures.nil?
+    acquire_metrics(current_slave)
     ok
   end
 end

@@ -81,7 +81,7 @@ class MesosAppMetrics < Sensu::Plugin::Metric::CLI::Statsd
 
   def run
     current_slave = acquire_app_slave
-    critical @failures unless @failures.nil?
+    # critical @failures unless @failures.nil?
     acquire_metrics(current_slave).each do |k,v|
       output [k,v].join('.')
     end

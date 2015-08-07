@@ -49,6 +49,10 @@ class MesosAppMetrics < Sensu::Plugin::Metric::CLI::Statsd
          long: '--app APP',
          description: 'The name of the app to get metrics from'
 
+ option :scheme,
+        description: 'Metric naming scheme, text to prepend to .$parent.$child',
+        long: '--scheme SCHEME'
+
   # Acquire the slave that a particular app is running on
   #
   def acquire_app_slave
@@ -83,7 +87,7 @@ class MesosAppMetrics < Sensu::Plugin::Metric::CLI::Statsd
     current_slave = acquire_app_slave
     # critical @failures unless @failures.nil?
     acquire_metrics(current_slave).each do |k,v|
-      output [k,v].join('.')
+      output [config[:scheme],k,v].join('.')
     end
     ok
   end

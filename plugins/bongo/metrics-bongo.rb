@@ -84,10 +84,11 @@ class MesosAppMetrics < Sensu::Plugin::Metric::CLI::Statsd
   end
 
   def run
+    timestamp = Time.now.to_i
     current_slave = acquire_app_slave
     # critical @failures unless @failures.nil?
-    acquire_metrics(current_slave).each do |k,v|
-      output [config[:scheme],k,v].join('.')
+    acquire_metrics(current_slave).each do |key,value|
+      output [config[:scheme],key].join('.'), value, timestamp
     end
     ok
   end

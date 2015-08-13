@@ -8,7 +8,7 @@ class StatsdEvent < Sensu::Handler
 
   input = JSON.parse(STDIN.read)
   data = input['check']['output']
-  server = 'localhost'
+  server = 'monitor-0.useast1n.yb0t.com'
   port = 8125
 
   s = UDPSocket.new

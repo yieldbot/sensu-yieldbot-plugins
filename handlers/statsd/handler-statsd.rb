@@ -15,6 +15,6 @@ class StatsdEvent < Sensu::Handler
   s.connect(server, port)
 
   data.each_line do |metric|
-    s.send(metric, 0) if metric.match(/^[a-z]/)
+    s.send(metric, 0)
   end
 end

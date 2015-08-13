@@ -80,7 +80,7 @@ class MesosAppMetrics < Sensu::Plugin::Metric::CLI::Statsd
   # reterive the metrics from the app
   #
   def acquire_metrics(current_slave)
-    JSON.parse(`curl -s -k http://#{current_slave}:31520/v1/kafka/metrics`)
+    JSON.parse(`curl -s -k http://#{current_slave}:31550/v1/kafka/metrics`)
   end
 
   def run

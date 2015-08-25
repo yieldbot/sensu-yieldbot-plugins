@@ -1,6 +1,6 @@
 #! /usr/bin/env ruby
 #
-# metrics-bongo.rb
+# check-bongo-endpoint.rb
 #
 # DESCRIPTION:
 #
@@ -26,14 +26,14 @@
 #   for details.
 #
 
-require 'sensu-plugin/metric/cli'
+require 'sensu-plugin/check/cli'
 require 'json'
 require 'rest-client'
 
 #
 # Get a set of metrics from an app running in Mesos
 #
-class MesosAppMetrics < Sensu::Plugin::Metric::CLI::Statsd
+class MesosAppEndpointCheck < Sensu::Plugin::Check::CLI
   option :server,
          description: 'The consul dns name of the mesos server',
          short: '-s SERVER',
@@ -49,10 +49,6 @@ class MesosAppMetrics < Sensu::Plugin::Metric::CLI::Statsd
          long: '--app APP',
          description: 'The name of the app to get metrics from'
 
- option :scheme,
-        description: 'Metric naming scheme, text to prepend to .$parent.$child',
-        long: '--scheme SCHEME'
-
   # Acquire the slave that a particular app is running on
   #
   def acquire_app_slave
@@ -61,7 +57,6 @@ class MesosAppMetrics < Sensu::Plugin::Metric::CLI::Statsd
     # the default port is the one supplied by consul
     port   = config[:port] || '443'
     app    = config[:app]
-    @failures = []
 
     # break out if the client fails to connect to the mesos master
     begin
@@ -74,18 +69,17 @@ class MesosAppMetrics < Sensu::Plugin::Metric::CLI::Statsd
     JSON.parse(r)['app']['tasks'][0]['host']
   end
 
-  # reterive the metrics from the app
-  #
-  def acquire_metrics(current_slave)
-    JSON.parse(`curl -s -k http://#{current_slave}:31550/v1/kafka/metrics`)
+  def json_valid?(str)
+    JSON.parse(str)
+    return true
+  rescue JSON::ParserError
+    return false
   end
 
   def run
-    timestamp = Time.now.to_i
     current_slave = acquire_app_slave
-    acquire_metrics(current_slave).each do |key, value|
-      output [config[:scheme], key].join('.'), value, timestamp
-    end
+    out = `curl -s -k http://#{current_slave}:31550/v1/kafka/metrics`
+    critical unless json_valid?(out)
     ok
   end
 end

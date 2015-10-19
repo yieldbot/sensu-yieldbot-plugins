@@ -25,9 +25,29 @@ CHECK_FAILING = 2
 # issue.
 myname = socket.gethostname()
 
+def is_master(conn):
+    conn.request("GET", "/_cluster/state/master_node")
+    r1 = conn.getresponse()
+    if r1.status >= 300:  # pylint: disable=E1101
+        msg = "check_es_indexstatus: host=%s received non-2xx resp=%s"%(myname, r1.status)
+        print msg
+        sys.exit(CHECK_FAILING)
+    masterjson = json.loads(r1.read())
+    conn.request("GET", "/_nodes/_local/info")
+    r1 = conn.getresponse()
+    if r1.status >= 300:  # pylint: disable=E1101
+        msg = "check_es_indexstatus: host=%s received non-2xx resp=%s"%(myname, r1.status)
+        print msg
+        sys.exit(CHECK_FAILING)
+    localjson = json.loads(r1.read())
+    return localjson["nodes"].keys()[0] == masterjson["master_node"]
+
 
 try:
     conn = httplib.HTTPConnection("localhost:9200")
+    if not is_master(conn):
+        print "Not master"
+        sys.exit(CHECK_PASSING)
     conn.request("GET", "/_cluster/health?pretty&level=indices")
     r1 = conn.getresponse()
     if r1.status >= 300:  # pylint: disable=E1101
@@ -56,4 +76,6 @@ except Exception, e:
     sys.exit(CHECK_FAILING)
 
 
+msg = "check_es_indexstatus: host=%s all indices GREEN"%(myname)
+print msg
 sys.exit(CHECK_PASSING)

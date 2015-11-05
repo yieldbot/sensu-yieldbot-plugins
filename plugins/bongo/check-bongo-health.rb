@@ -40,11 +40,6 @@ require 'json'
 # == Bongo Metrics Status
 #
 class BongoMetricCheck < Sensu::Plugin::Check::CLI
-  option :scheme,
-         description: 'URI scheme',
-         long: '--scheme SCHEME',
-         default: 'http'
-
   option :server,
          description: 'Marathon server',
          short: '-s SERVER',

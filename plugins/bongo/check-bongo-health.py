@@ -34,6 +34,7 @@ def get_status(host, group):
             print "Recieved non-2xx response= %s" % (data.status)
             sys.exit(FAIL)
         json_data = json.loads(data.read())
+        con.close()
         if json_data['status'] == 1:
             print "%s" % (json_data['msg'])
             sys.exit(FAIL)

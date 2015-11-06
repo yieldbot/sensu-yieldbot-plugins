@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 
+from optparse import OptionParser
 import socket
 import sys
 import httplib
 import json
-import argparse
 
 PASS = 0
 FAIL = 1
@@ -46,10 +46,10 @@ def get_status(host, group):
 
 
 if __name__=="__main__":
-    parser = argparse.ArgumentParser(description="Returns the health of cluster based on bongo metrics")
-    parser.add_argument("-s", dest="server", action="store", default="localhost:8080", help="Marathon Cluster address with port no")
-    parser.add_argument("-a", dest="app", action="store", default="bongo.useast.prod", help="App Id to retrieve the slave address")
-    parser.add_argument("-c", dest="group", action="store", default="yield_secor", help="Name of Consumer Group")
-    args = parser.parse_args()
-    host = get_bongo_host(args.server, args.app)
-    get_status(host, args.group)
+    parser = OptionParser()
+    parser.add_option("-s", dest="server", action="store", default="localhost:8080", help="Marathon Cluster address with port no")
+    parser.add_option("-a", dest="app", action="store", default="bongo.useast.prod", help="App Id to retrieve the slave address")
+    parser.add_option("-c", dest="group", action="store", default="yield_secor", help="Name of Consumer Group")
+    (options, args) = parser.parse_args()
+    host = get_bongo_host(options.server, options.app)
+    get_status(host, options.group)

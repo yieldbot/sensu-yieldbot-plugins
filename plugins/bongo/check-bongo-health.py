@@ -15,14 +15,14 @@ def get_bongo_host(server, app):
         con.request("GET","/v2/apps/" + app)
         data = con.getresponse()
         if data.status >= 300:
-            print "Recieved non-2xx response= %s" % (data.status)
+            print "get_bongo_host: Recieved non-2xx response= %s" % (data.status)
             sys.exit(FAIL)
         json_data = json.loads(data.read())
         host = "%s:%s" % (json_data['app']['tasks'][0]['host'],json_data['app']['tasks'][0]['ports'][0])
         con.close()
         return host
     except Exception, e:
-        print "%s :exception caught" % (e)
+        print "get_bongo_host: %s :exception caught" % (e)
         sys.exit(FAIL)
 
 def get_status(host, group):
@@ -31,18 +31,18 @@ def get_status(host, group):
         con.request("GET","/v1/kafka/health/" + group)
         data = con.getresponse()
         if data.status >= 300:
-            print "Recieved non-2xx response= %s" % (data.status)
+            print "get_status: Recieved non-2xx response= %s" % (data.status)
             sys.exit(FAIL)
         json_data = json.loads(data.read())
         con.close()
         if json_data['status'] == 1:
-            print "%s" % (json_data['msg'])
+            print "get_status: %s" % (json_data['msg'])
             sys.exit(FAIL)
         else:
             print "Cluster is fine"
             sys.exit(PASS)
     except Exception, e:
-        print "%s :exception caught" % (e)
+        print "get_status: %s :exception caught" % (e)
         sys.exit(FAIL)
 
 

@@ -55,6 +55,6 @@ for i in range(3):  # set up to try thrice if needed
         print "%s : exception=%s"%(myname, e)
         sys.exit(CHECK_FAILING)
 
-msg = "check_es_tribe_index: host=%s  tribe can see the indices  "%(myname)
+msg = "check_es_tribe_index: `tribe host=%s is fine now`"%(myname)
 print msg
 sys.exit(CHECK_PASSING)

@@ -25,7 +25,7 @@ def check_es_tribe_ind(cluster):
     for i in range(1,3):
         dt = datetime.datetime(year=now.year, month=now.month, day=now.day) - datetime.timedelta(days=i)
         dt_str = dt.strftime("%Y-%m-%d")
-        indarr.append("aadevents-" + dt_str)
+        indarr.append("adevents-" + dt_str)
         indarr.append("pubevents-" + dt_str)
     conn = httplib.HTTPConnection(cluster)
     conn.request("GET", "/_cat/indices")
@@ -41,7 +41,7 @@ def check_es_tribe_ind(cluster):
             sys.exit(CHECK_FAILING)
 
 
-for i in range(3):  # set up to try thrice if needed    
+for i in range(3):  # set up to try thrice if needed
     try:
         tribe = "localhost:9200"
         check_es_tribe_ind(tribe)
@@ -58,5 +58,3 @@ for i in range(3):  # set up to try thrice if needed
 msg = "check_es_tribe_index: host=%s  tribe can see the indices  "%(myname)
 print msg
 sys.exit(CHECK_PASSING)
-
-

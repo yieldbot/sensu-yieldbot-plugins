@@ -57,9 +57,9 @@ def get_threadpool_status(tpool):
         threadcnt["generic"] = respjson["nodes"][nodename]["thread_pool"]["generic"]["active"]
         threadcnt["index"] = respjson["nodes"][nodename]["thread_pool"]["index"]["active"]
         threadcnt["search"] = respjson["nodes"][nodename]["thread_pool"]["search"]["active"]
-        if threadcnt["search"] > 800:
+        if threadcnt["search"] >= 800:
             sys.exit(CHECK_WARNING)
-        elif threadcnt["search"] >1000:
+        elif threadcnt["search"] >= 1000:
             sys.exit(CHECK_FAILING)
         threadcnt["suggest"] = respjson["nodes"][nodename]["thread_pool"]["suggest"]["active"]
         threadcnt["get"] = respjson["nodes"][nodename]["thread_pool"]["get"]["active"]

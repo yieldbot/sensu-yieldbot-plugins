@@ -55,10 +55,10 @@ def get_threadpool_status(tpool, wt, ct):
         respjson = json.loads(r1.read())
         threadcnt = 0
         threadcnt = respjson["nodes"][nodename]["thread_pool"][tpool]["active"]
-        if threadcnt >= wt:
-            sys.exit(CHECK_WARNING)
-        elif threadcnt >= ct:
+        if threadcnt >= ct:
             sys.exit(CHECK_FAILING)
+        elif threadcnt >= wt:
+            sys.exit(CHECK_WARNING)
         print "Thread_pool count for " + tpool +" = " + str(threadcnt)
         sys.exit(CHECK_PASSING)
     except Exception, e:

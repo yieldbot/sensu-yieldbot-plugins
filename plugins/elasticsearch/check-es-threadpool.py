@@ -59,7 +59,7 @@ def get_threadpool_status(tpool, wt, ct):
             sys.exit(CHECK_FAILING)
         elif threadcnt >= wt:
             sys.exit(CHECK_WARNING)
-        print "Thread_pool count for " + tpool +" = " + str(threadcnt)
+        print "Thread_pool count for `%s is fine` "%tpool
         sys.exit(CHECK_PASSING)
     except Exception, e:
         print "%s : exception=%s"%(myname, e)

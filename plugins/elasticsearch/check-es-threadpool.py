@@ -46,7 +46,7 @@ def get_threadpool_status(tpool, wt, ct):
             print "Not master"
             sys.exit(CHECK_PASSING)
         conn.request("GET", "/_nodes/" + nodename + "/stats/thread_pool/")
-        
+
         r1 = conn.getresponse()
         if r1.status >= 300:  # pylint: disable=E1101
             msg = "check_es_threadpool: host=%s received non-2xx resp=%s"%(myname, r1.status)
@@ -69,14 +69,10 @@ if __name__=="__main__":
     usage = """Usage: %prog threadpool warning_threshold warning_threshold"""
     parser = OptionParser(usage=usage)
     parser.add_option("-t", dest="threadpool", action="store", default="", help="threadpool name e.g. index,search,bulk")
-    parser.add_option("-w", dest="warn_th", action="store", default="500", help="warning_threshold")
-    parser.add_option("-c", dest="crit_th", action="store", default="800", help="critical_threshold")
-    
-    (options, args) = parser.parse_args()
-    if len(args) != 3:
-        parser.error("incorrect number of arguments")
-    tpool, wt, ct = args
-    if tpool not in ['index', 'search', 'bulk']:
-        parser.error("invalid thread_pool: %s" % tpool)
-    get_threadpool_status(tpool, int(wt), int(ct))
+    parser.add_option("-w", dest="warn_th", type="int", action="store", default="500", help="warning_threshold")
+    parser.add_option("-c", dest="crit_th", type="int", action="store", default="800", help="critical_threshold")
 
+    (options, args) = parser.parse_args()
+    if options.threadpool not in ['index', 'search', 'bulk']:
+        parser.error("invalid thread_pool: %s" % options.threadpool)
+    get_threadpool_status(options.threadpool, options.warn_th, options.crit_th)

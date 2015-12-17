@@ -45,10 +45,10 @@ def get_status(host, region):
             else:
                 json_data = json.loads(data.read())
                 if json_data['status'] == 1:
-                    output = "%s status: %s \n" % (adservers[region][i], json_data['msg'])
+                    output = output + "%s status: %s \n" % (adservers[region][i], json_data['msg'])
         con.close()
         if output == "":
-            print "Adservers are fine"
+            print "Mirror Maker Adservers are fine"
             sys.exit(PASS)
         else:
             print output

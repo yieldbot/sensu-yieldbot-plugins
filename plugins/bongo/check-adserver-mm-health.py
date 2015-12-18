@@ -35,7 +35,7 @@ def get_bongo_host(server, app):
 
 def get_status(host, region):
     try:
-        output = ""
+        output = "\n"
         con = httplib.HTTPConnection(host,timeout=45)
         for i in range(len(adservers[region])):
             con.request("GET","/v1/adserver/health/" + adservers[region][i])
@@ -47,7 +47,7 @@ def get_status(host, region):
                 if json_data['status'] == 1:
                     output = output + "%s status: %s \n" % (adservers[region][i], json_data['msg'])
         con.close()
-        if output == "":
+        if output == "\n":
             print "mirror-maker on addservers are fine"
             sys.exit(PASS)
         else:

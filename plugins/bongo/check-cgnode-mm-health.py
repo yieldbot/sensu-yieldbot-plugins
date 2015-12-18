@@ -60,7 +60,7 @@ def get_bongo_host(server, app):
 
 def get_status(host, region):
     try:
-        output = ""
+        output = "\n"
         con = httplib.HTTPConnection(host,timeout=45)
         for i in range(len(cgnodes[region])):
             con.request("GET","/v1/choose-goose/health/" + cgnodes[region][i])
@@ -72,7 +72,7 @@ def get_status(host, region):
                 if json_data['status'] == 1:
                     output = output + "%s status: %s \n" % (cgnodes[region][i], json_data['msg'])
         con.close()
-        if output == "":
+        if output == "\n":
             print "mirror-maker on choose-goose nodes are fine"
             sys.exit(PASS)
         else:

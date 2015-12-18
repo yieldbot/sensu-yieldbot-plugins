@@ -48,7 +48,7 @@ def get_status(host, region):
                     output = output + "%s status: %s \n" % (adservers[region][i], json_data['msg'])
         con.close()
         if output == "":
-            print "Mirror Maker Adservers are fine"
+            print "mirror-maker on addservers are fine"
             sys.exit(PASS)
         else:
             print output

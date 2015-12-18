@@ -73,7 +73,7 @@ def get_status(host, region):
                     output = output + "%s status: %s \n" % (cgnodes[region][i], json_data['msg'])
         con.close()
         if output == "":
-            print "Mirror Maker Choose-Goose Nodes are fine"
+            print "mirror-maker on choose-goose nodes are fine"
             sys.exit(PASS)
         else:
             print output

@@ -10,12 +10,39 @@ PASS = 0
 FAIL = 1
 
 cgnodes = {}
-cgnodes["east"] = ["prd-useast-service-adserver-c-01.prd.yb0t.cc",
-                     "prd-useast-service-adserver-d-01.prd.yb0t.cc",
-                     "prd-useast-service-adserver-e-01.prd.yb0t.cc"]
-cgnodes["west"] = ["prd-uswest-service-adserver-c-01.prd.yb0t.cc",
-                     "prd-uswest-service-adserver-d-01.prd.yb0t.cc",
-                     "prd-uswest-service-adserver-e-01.prd.yb0t.cc"]
+cgnodes["east"] = ["prd-useast-choose-goose-01.prd.yb0t.cc",
+                  "prd-useast-choose-goose-02.prd.yb0t.cc",
+                  "prd-useast-choose-goose-03.prd.yb0t.cc",
+                  "prd-useast-choose-goose-04.prd.yb0t.cc",
+                  "prd-useast-choose-goose-05.prd.yb0t.cc",
+                  "prd-useast-choose-goose-06.prd.yb0t.cc",
+                  "prd-useast-choose-goose-07.prd.yb0t.cc",
+                  "prd-useast-choose-goose-08.prd.yb0t.cc",
+                  "prd-useast-choose-goose-09.prd.yb0t.cc",
+                  "prd-useast-choose-goose-10.prd.yb0t.cc",
+                  "prd-useast-choose-goose-11.prd.yb0t.cc",
+                  "prd-useast-choose-goose-12.prd.yb0t.cc",
+                  "prd-useast-choose-goose-13.prd.yb0t.cc",
+                  "prd-useast-choose-goose-14.prd.yb0t.cc",
+                  "prd-useast-choose-goose-15.prd.yb0t.cc",
+                  "prd-useast-choose-goose-16.prd.yb0t.cc"]
+
+cgnodes["west"] = ["prd-uswest-choose-goose-01.prd.yb0t.cc",
+                  "prd-uswest-choose-goose-02.prd.yb0t.cc",
+                  "prd-uswest-choose-goose-03.prd.yb0t.cc",
+                  "prd-uswest-choose-goose-04.prd.yb0t.cc",
+                  "prd-uswest-choose-goose-05.prd.yb0t.cc",
+                  "prd-uswest-choose-goose-06.prd.yb0t.cc",
+                  "prd-uswest-choose-goose-07.prd.yb0t.cc",
+                  "prd-uswest-choose-goose-08.prd.yb0t.cc",
+                  "prd-uswest-choose-goose-09.prd.yb0t.cc",
+                  "prd-uswest-choose-goose-10.prd.yb0t.cc",
+                  "prd-uswest-choose-goose-11.prd.yb0t.cc",
+                  "prd-uswest-choose-goose-12.prd.yb0t.cc",
+                  "prd-uswest-choose-goose-13.prd.yb0t.cc",
+                  "prd-uswest-choose-goose-14.prd.yb0t.cc",
+                  "prd-uswest-choose-goose-15.prd.yb0t.cc",
+                  "prd-uswest-choose-goose-16.prd.yb0t.cc"]
 
 def get_bongo_host(server, app):
     try:
@@ -37,8 +64,8 @@ def get_status(host, region):
     try:
         output = ""
         con = httplib.HTTPConnection(host,timeout=45)
-        for i in range(len(adservers[region])):
-            con.request("GET","/v1/adserver/health/" + cgnodes[region][i])
+        for i in range(len(cgnodes[region])):
+            con.request("GET","/v1/choose-goose/health/" + cgnodes[region][i])
             data = con.getresponse()
             if data.status >= 300:
                 output = output + "%s status: Recieved non-2xx response= %s \n" % (cgnodes[region][i], data.status)

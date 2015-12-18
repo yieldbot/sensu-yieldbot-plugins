@@ -24,8 +24,7 @@ cgnodes["east"] = ["prd-useast-choose-goose-01.prd.yb0t.cc",
                   "prd-useast-choose-goose-12.prd.yb0t.cc",
                   "prd-useast-choose-goose-13.prd.yb0t.cc",
                   "prd-useast-choose-goose-14.prd.yb0t.cc",
-                  "prd-useast-choose-goose-15.prd.yb0t.cc",
-                  "prd-useast-choose-goose-16.prd.yb0t.cc"]
+                  "prd-useast-choose-goose-15.prd.yb0t.cc"]
 
 cgnodes["west"] = ["prd-uswest-choose-goose-01.prd.yb0t.cc",
                   "prd-uswest-choose-goose-02.prd.yb0t.cc",
@@ -41,8 +40,7 @@ cgnodes["west"] = ["prd-uswest-choose-goose-01.prd.yb0t.cc",
                   "prd-uswest-choose-goose-12.prd.yb0t.cc",
                   "prd-uswest-choose-goose-13.prd.yb0t.cc",
                   "prd-uswest-choose-goose-14.prd.yb0t.cc",
-                  "prd-uswest-choose-goose-15.prd.yb0t.cc",
-                  "prd-uswest-choose-goose-16.prd.yb0t.cc"]
+                  "prd-uswest-choose-goose-15.prd.yb0t.cc"]
 
 def get_bongo_host(server, app):
     try:

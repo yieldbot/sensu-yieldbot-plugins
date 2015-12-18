@@ -13,9 +13,9 @@ adservers = {}
 adservers["east"] = ["prd-useast-service-adserver-c-01.prd.yb0t.cc",
                      "prd-useast-service-adserver-d-01.prd.yb0t.cc",
                      "prd-useast-service-adserver-e-01.prd.yb0t.cc"]
-adservers["west"] = ["prd-uswest-service-adserver-c-01.prd.yb0t.cc",
-                     "prd-uswest-service-adserver-d-01.prd.yb0t.cc",
-                     "prd-uswest-service-adserver-e-01.prd.yb0t.cc"]
+adservers["west"] = ["prd-uswest-service-adserver-a-01.prd.yb0t.cc",
+                     "prd-uswest-service-adserver-b-01.prd.yb0t.cc",
+                     "prd-uswest-service-adserver-c-01.prd.yb0t.cc"]
 
 def get_bongo_host(server, app):
     try:

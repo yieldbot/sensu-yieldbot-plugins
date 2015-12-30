@@ -34,10 +34,10 @@ def get_bongo_host(server, app):
         sys.exit(FAIL)
 
 def get_status(host, region):
-    try:
-        output = "\n"
-        con = httplib.HTTPConnection(host,timeout=45)
-        for i in range(len(adservers[region])):
+    output = "\n"
+    con = httplib.HTTPConnection(host,timeout=45)
+    for i in range(len(adservers[region])):
+        try:
             con.request("GET","/v1/adserver/health/" + adservers[region][i])
             data = con.getresponse()
             if data.status >= 300:
@@ -46,17 +46,15 @@ def get_status(host, region):
                 json_data = json.loads(data.read())
                 if json_data['status'] == 1:
                     output = output + "%s status: %s \n" % (adservers[region][i], json_data['msg'])
-        con.close()
-        if output == "\n":
-            print "mirror-maker on adservers are fine"
-            sys.exit(PASS)
-        else:
-            print output
-            sys.exit(FAIL)
-    except Exception, e:
-        print "get_status: %s :exception caught" % (e)
+        except:
+            output = output + "get_status: %s exception caught for adserver: %s" % (e,adservers[region][i])
+    con.close()
+    if output == "\n":
+        print "mirror-maker on adservers are fine"
+        sys.exit(PASS)
+    else:
+        print output
         sys.exit(FAIL)
-
 
 if __name__=="__main__":
     parser = OptionParser()

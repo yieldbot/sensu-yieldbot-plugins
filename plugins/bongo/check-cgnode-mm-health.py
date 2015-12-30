@@ -59,10 +59,10 @@ def get_bongo_host(server, app):
         sys.exit(FAIL)
 
 def get_status(host, region):
-    try:
-        output = "\n"
-        con = httplib.HTTPConnection(host,timeout=45)
-        for i in range(len(cgnodes[region])):
+    output = "\n"
+    con = httplib.HTTPConnection(host,timeout=45)
+    for i in range(len(cgnodes[region])):
+        try:
             con.request("GET","/v1/choose-goose/health/" + cgnodes[region][i])
             data = con.getresponse()
             if data.status >= 300:
@@ -71,15 +71,14 @@ def get_status(host, region):
                 json_data = json.loads(data.read())
                 if json_data['status'] == 1:
                     output = output + "%s status: %s \n" % (cgnodes[region][i], json_data['msg'])
-        con.close()
-        if output == "\n":
-            print "mirror-maker on choose-goose nodes are fine"
-            sys.exit(PASS)
-        else:
-            print output
-            sys.exit(FAIL)
-    except Exception, e:
-        print "get_status: %s :exception caught" % (e)
+        except Exception, e:
+            output = output + "get_status: %s exception caught for cg-node: %s" % (e,cgnodes[region][i])
+    con.close()
+    if output == "\n":
+        print "mirror-maker on choose-goose nodes are fine"
+        sys.exit(PASS)
+    else:
+        print output
         sys.exit(FAIL)
 
 

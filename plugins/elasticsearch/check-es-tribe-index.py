@@ -22,7 +22,7 @@ myname = socket.gethostname()
 def check_es_tribe_ind(cluster):
     indarr = []
     now = datetime.datetime.utcnow()
-    for i in range(1,3):
+    for i in range(3,5):
         dt = datetime.datetime(year=now.year, month=now.month, day=now.day) - datetime.timedelta(days=i)
         dt_str = dt.strftime("%Y-%m-%d")
         indarr.append("adevents-" + dt_str)

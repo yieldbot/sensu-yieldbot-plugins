@@ -20,7 +20,6 @@ myname = socket.gethostname()
 
 def check_aggregation_cluster(cluster):
     now = datetime.datetime.utcnow()
-    conn = httplib.HTTPConnection(cluster)
     missing = ""
     indices = []
     for i in range(2):
@@ -28,8 +27,10 @@ def check_aggregation_cluster(cluster):
         dt_str = dt.strftime("%Y-%m")
         indices.append("aggstats-" + dt_str)
     for i in range(len(indices)):
+        conn = httplib.HTTPConnection(cluster)
         conn.request("GET", "/" + indices[i])
         res = conn.getresponse()
+        conn.close()
         if res.status == 404:  # pylint: disable=E1101
             missing = missing + "%s," % (indices[i])
         elif res.status != 200:
@@ -42,7 +43,6 @@ def check_aggregation_cluster(cluster):
 
 def check_hotevents_cluster(cluster):
     now = datetime.datetime.utcnow()
-    conn = httplib.HTTPConnection(cluster)
     missing = ""
     indices = []
     for i in range(2):
@@ -51,8 +51,10 @@ def check_hotevents_cluster(cluster):
         indices.append("adevents-" + dt_str)
         indices.append("pubevents-" + dt_str)
     for i in range(len(indices)):
+        conn = httplib.HTTPConnection(cluster)
         conn.request("GET", "/" + indices[i])
         res = conn.getresponse()
+        conn.close()
         if res.status == 404:  # pylint: disable=E1101
             missing = missing + "%s," % (indices[i])
         elif res.status != 200:
@@ -64,7 +66,6 @@ def check_hotevents_cluster(cluster):
 
 def check_coldevents_cluster(cluster):
     now = datetime.datetime.utcnow()
-    conn = httplib.HTTPConnection(cluster)
     missing = ""
     indices = []
     for i in range(2):
@@ -73,8 +74,10 @@ def check_coldevents_cluster(cluster):
         indices.append("adevents-" + dt_str)
         indices.append("pubevents-" + dt_str)
     for i in range(len(indices)):
+        conn = httplib.HTTPConnection(cluster)
         conn.request("GET", "/" + indices[i])
         res = conn.getresponse()
+        conn.close()
         if res.status == 404:  # pylint: disable=E1101
             missing = missing + "%s," % (indices[i])
         elif res.status != 200:
@@ -93,8 +96,8 @@ if __name__ == '__main__':
         check_aggregation_cluster(cluster)
     except (TypeError, httplib.IncompleteRead) as e:
         OUTPUT.append("check_aggregation_cluster: host=%s, got exception: %s" % (myname,e))
-    except Exception, e:
-        OUTPUT.append("check_aggregation_cluster: host=%s, got exception: %s" % (myname,e))
+    #except Exception, e:
+        #OUTPUT.append("check_aggregation_cluster: host=%s, got exception: %s" % (myname,e))
 
     #check if scrit is able to connect hotevents cluster
     try:

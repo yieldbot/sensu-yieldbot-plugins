@@ -32,22 +32,22 @@ def get_status(host, group, time):
         con.request("GET","/v1/eventdrop/" + group + "/" + time)
         data = con.getresponse()
         if data.status >= 300:
-            print "Event Anomaly Check Status `WARNING`: Recieved non-2xx response= %s" % (data.status)
+            print "Event Anomaly Check Status: Recieved non-2xx response= %s" % (data.status)
             sys.exit(WARNING)
         json_data = json.loads(data.read())
         con.close()
 
         if json_data['status'] == 2:
-            print "Event Anomaly Check Status `CRITICAL`: %s" % (json_data['msg'])
+            print "Event Anomaly Check Status: %s" % (json_data['msg'])
             sys.exit(CRITICAL)
         elif json_data['status'] == 1:
-            print "Event Anomaly Check Status `WARNING`: %s" % (json_data['msg'])
+            print "Event Anomaly Check Status: %s" % (json_data['msg'])
             sys.exit(WARNING)
         else:
-            print "Event Anomaly Check Status `Fine`: %s" % (json_data['msg'])
+            print "Event Anomaly Check Status: %s" % (json_data['msg'])
             sys.exit(PASS)
     except Exception, e:
-        print "Event Anomaly Check Status `WARNING`: %s :exception caught" % (e)
+        print "Event Anomaly Check Status: %s :exception caught" % (e)
         sys.exit(WARNING)
 
 if __name__=="__main__":

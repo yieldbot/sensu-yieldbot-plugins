@@ -7,7 +7,8 @@ import httplib
 import json
 
 PASS = 0
-FAIL = 1
+WARNING = 1
+CRITICAL = 2
 
 def get_bongo_host(server, app):
     try:
@@ -15,15 +16,15 @@ def get_bongo_host(server, app):
         con.request("GET","/v2/apps/" + app)
         data = con.getresponse()
         if data.status >= 300:
-            print "get_bongo_host: Recieved non-2xx response= %s" % (data.status)
-            sys.exit(FAIL)
+            print "eventanomaly check get_bongo_host: Recieved non-2xx response= %s" % (data.status)
+            sys.exit(WARNING)
         json_data = json.loads(data.read())
         host = "%s:%s" % (json_data['app']['tasks'][0]['host'],json_data['app']['tasks'][0]['ports'][0])
         con.close()
         return host
     except Exception, e:
-        print "get_bongo_host: %s :exception caught" % (e)
-        sys.exit(FAIL)
+        print "eventanomaly check get_bongo_host: %s :exception caught" % (e)
+        sys.exit(WARNING)
 
 def get_status(host, group, time):
     try:
@@ -31,23 +32,23 @@ def get_status(host, group, time):
         con.request("GET","/v1/eventdrop/" + group + "/" + time)
         data = con.getresponse()
         if data.status >= 300:
-            print "get_status: Recieved non-2xx response= %s" % (data.status)
-            sys.exit(FAIL)
+            print "Event Anomaly Check Status `WARNING`: Recieved non-2xx response= %s" % (data.status)
+            sys.exit(WARNING)
         json_data = json.loads(data.read())
         con.close()
 
-        print "get_status: %s" % (json_data['msg'])
-        sys.exit(json_data['status'])
-
-        #if json_data['status'] == 1:
-        #    print "get_status: %s" % (json_data['msg'])
-        #    sys.exit(FAIL)
-        #else:
-        #    print "%s is fine" %group
-        #    sys.exit(PASS)
+        if json_data['status'] == 2:
+            print "Event Anomaly Check Status `CRITICAL`: %s" % (json_data['msg'])
+            sys.exit(CRITICAL)
+        elif json_data['status'] == 1:
+            print "Event Anomaly Check Status `WARNING`: %s" % (json_data['msg'])
+            sys.exit(WARNING)
+        else:
+            print "Event Anomaly Check Status `Fine`: %s" % (json_data['msg'])
+            sys.exit(PASS)
     except Exception, e:
-        print "get_status: %s :exception caught" % (e)
-        sys.exit(FAIL)
+        print "Event Anomaly Check Status `WARNING`: %s :exception caught" % (e)
+        sys.exit(WARNING)
 
 if __name__=="__main__":
     parser = OptionParser()

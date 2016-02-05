@@ -38,13 +38,13 @@ def get_status(host, group, time):
         con.close()
 
         if json_data['status'] == 2:
-            print "Event Anomaly Check Status: %s" % (json_data['msg'])
+            print "Event Anomaly Check Status for `%s` : %s" % (time,json_data['msg'])
             sys.exit(CRITICAL)
         elif json_data['status'] == 1:
-            print "Event Anomaly Check Status: %s" % (json_data['msg'])
+            print "Event Anomaly Check Status for `%s` : %s" % (time,json_data['msg'])
             sys.exit(WARNING)
         else:
-            print "Event Anomaly Check Status: %s" % (json_data['msg'])
+            print "Event Anomaly Check Status for `%s` : %s" % (time,json_data['msg'])
             sys.exit(PASS)
     except Exception, e:
         print "Event Anomaly Check Status: %s :exception caught" % (e)

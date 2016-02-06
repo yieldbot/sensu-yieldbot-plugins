@@ -36,6 +36,6 @@ if __name__ == '__main__':
         check_tribe_node(cluster)
         print " `check_tribe_node:` The tribe node is fine and reachable."
         sys.exit(CHECK_PASSING)
-    except (TypeError, httplib.IncompleteRead) as e:
+    except Exception as e:
         print " `check_tribe_node:` host=%s, Unable to connect tribe node. got exception: %s" % (myname,e)
         sys.exit(CHECK_FAILING)

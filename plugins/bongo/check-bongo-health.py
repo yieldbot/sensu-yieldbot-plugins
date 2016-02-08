@@ -39,7 +39,7 @@ def get_status(host, group):
             print "get_status: %s" % (json_data['msg'])
             sys.exit(FAIL)
         else:
-            print "%s is fine" %group
+            print " `%s` is fine" %group
             sys.exit(PASS)
     except Exception, e:
         print "get_status: %s :exception caught" % (e)

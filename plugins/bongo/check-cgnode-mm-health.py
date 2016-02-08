@@ -63,7 +63,7 @@ def get_status(host, region):
             output = output + "get_status: %s exception caught for cg-node: %s" % (e,cgnodes[region][i])
     con.close()
     if output == "\n":
-        print "mirror-maker on choose-goose nodes are fine"
+        print "mirror-maker on `choose-goose` nodes are fine"
         sys.exit(PASS)
     else:
         print output

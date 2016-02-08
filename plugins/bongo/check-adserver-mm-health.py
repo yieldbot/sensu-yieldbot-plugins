@@ -50,7 +50,7 @@ def get_status(host, region):
             output = output + "get_status: %s exception caught for adserver: %s" % (e,adservers[region][i])
     con.close()
     if output == "\n":
-        print "mirror-maker on adservers are fine"
+        print "mirror-maker on `adservers` are fine"
         sys.exit(PASS)
     else:
         print output

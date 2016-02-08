@@ -7,7 +7,8 @@ import httplib
 import json
 
 PASS = 0
-FAIL = 1
+WARNING = 1
+FAIL = 2
 
 def get_bongo_host(server, app):
     try:
@@ -35,9 +36,12 @@ def get_status(host, group):
             sys.exit(FAIL)
         json_data = json.loads(data.read())
         con.close()
-        if json_data['status'] == 1:
+        if json_data['status'] == 2:
             print "get_status: %s" % (json_data['msg'])
             sys.exit(FAIL)
+        elif json_data['status'] == 1:
+            print "get_status: %s" % (json_data['msg'])
+            sys.exit(WARNING)
         else:
             print "%s is fine" %group
             sys.exit(PASS)

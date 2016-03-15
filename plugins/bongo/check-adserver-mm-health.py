@@ -46,7 +46,7 @@ def get_status(host, region):
                 json_data = json.loads(data.read())
                 if json_data['status'] == 1:
                     output = output + "%s status: %s \n" % (adservers[region][i], json_data['msg'])
-        except:
+        except Exception, e:
             output = output + "get_status: %s exception caught for adserver: %s" % (e,adservers[region][i])
     con.close()
     if output == "\n":

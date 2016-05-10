@@ -30,7 +30,7 @@ def check_tribe_node(cluster):
             resp = conn.getresponse()
             data = json.loads(resp.read())
             if resp.status == 200:
-                if data['count'] < 100000000:
+                if data['count'] < 1000000:
                     msg = "ES Doc Count for index= `%s` is `%d`, less then expected count." % (index, data['count'])
                     output.append(msg)
             else:

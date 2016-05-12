@@ -21,7 +21,7 @@ def check_tribe_node(cluster):
     conn = httplib.HTTPConnection(cluster)
     now = datetime.datetime.utcnow()
     output = []
-    for i in range(0,7):
+    for i in range(1,7):
         dt = datetime.datetime(year=now.year, month=now.month, day=now.day) - datetime.timedelta(days=i)
         dt_str = dt.strftime("%Y-%m-%d")
         index = "adevents-" + dt_str

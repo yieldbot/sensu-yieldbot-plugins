@@ -16,7 +16,6 @@ cgnodes["east"] = ["prd-useast-choose-goose-01.prd.yb0t.cc",
                   "prd-useast-choose-goose-04.prd.yb0t.cc",
                   "prd-useast-choose-goose-05.prd.yb0t.cc",
                   "prd-useast-choose-goose-06.prd.yb0t.cc",
-                  "prd-useast-choose-goose-07.prd.yb0t.cc",
                   "prd-useast-choose-goose-08.prd.yb0t.cc",
                   "prd-useast-choose-goose-09.prd.yb0t.cc"]
 

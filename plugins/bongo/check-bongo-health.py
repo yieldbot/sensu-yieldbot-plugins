@@ -53,9 +53,9 @@ if __name__=="__main__":
     parser.add_option("-c", dest="group", action="store", default="yield_secor", help="Name of Consumer Group")
     (options, args) = parser.parse_args()
     host = get_bongo_host(options.server, options.app)
-    if "useast" in host:
-        host = host.split("prd")
-        consul_host = "%snode.us-east-1.consul" % host[0]
-    else:
-        consul_host = host
-    get_status(consul_host, options.group)
+    #if "useast" in host:
+    #    host = host.split("prd")
+    #    consul_host = "%snode.us-east-1.consul" % host[0]
+    #else:
+    #    consul_host = host
+    get_status(host, options.group)

@@ -18,9 +18,10 @@ def get_bongo_host(server, app):
             print "get_bongo_host: Recieved non-2xx response= %s" % (data.status)
             sys.exit(FAIL)
         json_data = json.loads(data.read())
-        host = "%s:%s" % (json_data['app']['tasks'][0]['host'],json_data['app']['tasks'][0]['ports'][0])
+        host = json_data['app']['tasks'][0]['host']
+        port = json_data['app']['tasks'][0]['ports'][0]
         con.close()
-        return host
+        return host, port
     except Exception, e:
         print "get_bongo_host: %s :exception caught" % (e)
         sys.exit(FAIL)
@@ -52,10 +53,10 @@ if __name__=="__main__":
     parser.add_option("-a", dest="app", action="store", default="bongo.useast.prod", help="App Id to retrieve the slave address")
     parser.add_option("-c", dest="group", action="store", default="adserver", help="adserver/choosegoose")
     (options, args) = parser.parse_args()
-    host = get_bongo_host(options.server, options.app)
-    #if "useast" in host:
-    #    host = host.split("prd")
-    #    consul_host = "%snode.us-east-1.consul" % host[0]
-    #else:
-    #    consul_host = host
-    get_status(host, options.group)
+    host, port = get_bongo_host(options.server, options.app)
+    if "useast" in host:
+        host = host.rsplit("prd",1)
+        consul_host = "%snode.us-east-1.consul:%s" % (host[0], port)
+    else:
+        consul_host = "%s:%s" % (host, port)
+    get_status(consul_host, options.group)

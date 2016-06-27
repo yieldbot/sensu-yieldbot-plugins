@@ -23,7 +23,7 @@ def get_bongo_host(server, app):
         con.close()
         return host, port
     except Exception, e:
-        print "get_bongo_host: %s :exception caught" % (e)
+        print "%s Exception caught in get_bongo_host" % (e)
         sys.exit(FAIL)
 
 def get_status(host, group):
@@ -37,13 +37,13 @@ def get_status(host, group):
         json_data = json.loads(data.read())
         con.close()
         if json_data['status'] == 1:
-            print "get_status: %s" % (json_data['msg'])
+            print "%s" % (json_data['msg'])
             sys.exit(FAIL)
         else:
             print " `%s` is fine" %group
             sys.exit(PASS)
     except Exception, e:
-        print "get_status: %s :exception caught" % (e)
+        print "%s  Exception caught in get_status" % (e)
         sys.exit(FAIL)
 
 

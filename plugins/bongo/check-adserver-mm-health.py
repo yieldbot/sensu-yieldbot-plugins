@@ -23,7 +23,7 @@ def get_bongo_host(server, app):
         con.request("GET","/v2/apps/" + app)
         data = con.getresponse()
         if data.status >= 300:
-            print "get_bongo_host: Recieved non-2xx response= %s" % (data.status)
+            print "Recieved non-2xx response= %s in get_bongo_host" % (data.status)
             sys.exit(FAIL)
         json_data = json.loads(data.read())
         host = json_data['app']['tasks'][0]['host']
@@ -31,7 +31,7 @@ def get_bongo_host(server, app):
         con.close()
         return host, port
     except Exception, e:
-        print "get_bongo_host: %s :exception caught" % (e)
+        print "%s Exception caught in get_bongo_host" % (e)
         sys.exit(FAIL)
 
 def get_status(host, region):
@@ -46,9 +46,9 @@ def get_status(host, region):
             else:
                 json_data = json.loads(data.read())
                 if json_data['status'] == 1:
-                    output = output + "%s status: %s \n" % (adservers[region][i], json_data['msg'])
+                    output = output + "%s status= %s \n" % (adservers[region][i], json_data['msg'])
         except Exception, e:
-            output = output + "get_status: %s exception caught for adserver: %s" % (e,adservers[region][i])
+            output = output + "%s Exception caught for adserver %s in get_status" % (e,adservers[region][i])
     con.close()
     if output == "\n":
         print "mirror-maker on `adservers` are fine"

@@ -16,7 +16,7 @@ def get_bongo_host(server, app):
         con.request("GET","/v2/apps/" + app)
         data = con.getresponse()
         if data.status >= 300:
-            print "eventanomaly check get_bongo_host: Recieved non-2xx response= %s" % (data.status)
+            print "eventanomaly check get_bongo_host= Recieved non-2xx response= %s" % (data.status)
             sys.exit(WARNING)
         json_data = json.loads(data.read())
         host = json_data['app']['tasks'][0]['host']
@@ -24,7 +24,7 @@ def get_bongo_host(server, app):
         con.close()
         return host, port
     except Exception, e:
-        print "eventanomaly check get_bongo_host: %s :exception caught" % (e)
+        print "eventanomaly check get_bongo_host= %s Exception caught" % (e)
         sys.exit(WARNING)
 
 def get_status(host, group, time):
@@ -33,22 +33,22 @@ def get_status(host, group, time):
         con.request("GET","/v1/eventdrop/" + group + "/" + time)
         data = con.getresponse()
         if data.status >= 300:
-            print "Event Anomaly Check Status: Recieved non-2xx response= %s" % (data.status)
+            print "Event Anomaly Check Status= Recieved non-2xx response= %s" % (data.status)
             sys.exit(WARNING)
         json_data = json.loads(data.read())
         con.close()
 
         if json_data['status'] == 2:
-            print "Event Anomaly Check Status for `%s` : %s" % (time,json_data['msg'])
+            print "Event Anomaly Check Status for `%s` = %s" % (time,json_data['msg'])
             sys.exit(CRITICAL)
         elif json_data['status'] == 1:
-            print "Event Anomaly Check Status for `%s` : %s" % (time,json_data['msg'])
+            print "Event Anomaly Check Status for `%s` = %s" % (time,json_data['msg'])
             sys.exit(WARNING)
         else:
-            print "Event Anomaly Check Status for `%s` : %s" % (time,json_data['msg'])
+            print "Event Anomaly Check Status for `%s` = %s" % (time,json_data['msg'])
             sys.exit(PASS)
     except Exception, e:
-        print "Event Anomaly Check Status: %s :exception caught" % (e)
+        print "Event Anomaly Check Status= %s Exception caught" % (e)
         sys.exit(WARNING)
 
 if __name__=="__main__":

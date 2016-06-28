@@ -30,7 +30,7 @@ def get_bongo_host(server, app):
         con.request("GET","/v2/apps/" + app)
         data = con.getresponse()
         if data.status >= 300:
-            print "get_bongo_host: Recieved non-2xx response= %s" % (data.status)
+            print " Recieved non-2xx response= %s in get_bongo_host" % (data.status)
             sys.exit(FAIL)
         json_data = json.loads(data.read())
         host = json_data['app']['tasks'][0]['host']
@@ -38,7 +38,7 @@ def get_bongo_host(server, app):
         con.close()
         return host, port
     except Exception, e:
-        print "get_bongo_host: %s :exception caught" % (e)
+        print "%s Exception caught in get_bongo_host" % (e)
         sys.exit(FAIL)
 
 def get_status(host, region):
@@ -49,13 +49,13 @@ def get_status(host, region):
             con.request("GET","/v1/choose-goose/health/" + cgnodes[region][i])
             data = con.getresponse()
             if data.status >= 300:
-                output = output + "%s status: Recieved non-2xx response= %s \n" % (cgnodes[region][i], data.status)
+                output = output + "%s Recieved non-2xx response= %s \n" % (cgnodes[region][i], data.status)
             else:
                 json_data = json.loads(data.read())
                 if json_data['status'] == 1:
-                    output = output + "%s status: %s \n" % (cgnodes[region][i], json_data['msg'])
+                    output = output + "%s status= %s \n" % (cgnodes[region][i], json_data['msg'])
         except Exception, e:
-            output = output + "get_status: %s exception caught for cg-node: %s" % (e,cgnodes[region][i])
+            output = output + "%s exception caught in get_status for cg-node= %s" % (e,cgnodes[region][i])
     con.close()
     if output == "\n":
         print "mirror-maker on `choose-goose` nodes are fine"

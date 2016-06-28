@@ -32,7 +32,7 @@ def get_status(host, group):
         con.request("GET","/v1/kafka/health/" + group)
         data = con.getresponse()
         if data.status >= 300:
-            print "get_status: Recieved non-2xx response= %s" % (data.status)
+            print "Recieved non-2xx response= %s in get_status" % (data.status)
             sys.exit(FAIL)
         json_data = json.loads(data.read())
         con.close()

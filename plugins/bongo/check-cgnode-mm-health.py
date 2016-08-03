@@ -17,11 +17,11 @@ cgnodes["east"] = ["prd-useast-choose-goose-01.prd.yb0t.cc",
                   "prd-useast-choose-goose-05.prd.yb0t.cc",
                   "prd-useast-choose-goose-06.prd.yb0t.cc"]
 
-cgnodes["west"] = ["10.101.66.209"
-                   "10.27.8.42"
-                   "10.223.130.36"
-                   "10.101.199.169"
-                   "10.26.3.139"
+cgnodes["west"] = ["10.101.66.209",
+                   "10.27.8.42",
+                   "10.223.130.36",
+                   "10.101.199.169",
+                   "10.26.3.139",
                    "10.26.149.132"]
 
 def get_bongo_host(server, app):

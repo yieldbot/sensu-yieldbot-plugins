@@ -13,8 +13,8 @@ adservers = {}
 adservers["east"] = ["prd-useast-service-adserver-c-01.prd.yb0t.cc",
                      "prd-useast-service-adserver-d-01.prd.yb0t.cc",
                      "prd-useast-service-adserver-e-01.prd.yb0t.cc"]
-adservers["west"] = ["10.135.7.114"
-                     "10.123.194.110"
+adservers["west"] = ["10.135.7.114",
+                     "10.123.194.110",
                      "10.212.9.16"]
 
 def get_bongo_host(server, app):

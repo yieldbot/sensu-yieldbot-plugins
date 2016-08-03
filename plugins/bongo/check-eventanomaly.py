@@ -58,8 +58,8 @@ if __name__=="__main__":
     parser.add_option("-g", dest="group", action="store", default="pmi", help="The group of event pmi or adevents")
     parser.add_option("-t", dest="time", action="store", default="10min", help="The time gap for which the difference is to be calculated")
     (options, args) = parser.parse_args()
-    host, port = get_bongo_host(options.server, options.app)
-    if "useast" in host:
+    if "useast" in options.app:
+        host, port = get_bongo_host(options.server, options.app)
         host = host.rsplit("prd",1)
         consul_host = "%snode.us-east-1.consul:%s" % (host[0], port)
     else:

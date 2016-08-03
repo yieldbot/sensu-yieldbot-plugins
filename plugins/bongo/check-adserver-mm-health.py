@@ -63,8 +63,8 @@ if __name__=="__main__":
     parser.add_option("-a", dest="app", action="store", default="bongo.useast.prod", help="App Id to retrieve the slave address")
     parser.add_option("-r", dest="region", action="store", default="east", help="Region for which adservers health has to be checked")
     (options, args) = parser.parse_args()
-    host, port = get_bongo_host(options.server, options.app)
-    if "useast" in host:
+    if "useast" in options.app:
+        host, port = get_bongo_host(options.server, options.app)
         host = host.rsplit("prd",1)
         consul_host = "%snode.us-east-1.consul:%s" % (host[0], port)
     else:

@@ -63,5 +63,5 @@ if __name__=="__main__":
         host = host.rsplit("prd",1)
         consul_host = "%snode.us-east-1.consul:%s" % (host[0], port)
     else:
-        consul_host = "%s:%s" % (host, port)
+        consul_host = options.server
     get_status(consul_host, options.group, options.time)

@@ -137,4 +137,5 @@ if __name__ == '__main__':
         sys.exit(CHECK_PASSING)
     else:
         print " `check_tribe_node:` %s %s %s" % (coldevents, hotevents, aggregation)
+        sys.exit(CHECK_WARNING)
         

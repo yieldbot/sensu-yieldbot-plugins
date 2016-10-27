@@ -28,14 +28,15 @@ def get_bongo_host(server, app):
         con.request("GET","/v2/apps/" + app)
         data = con.getresponse()
         if data.status >= 300:
-            print "get_bongo_host: Recieved non-2xx response= %s" % (data.status)
+            print " Recieved non-2xx response= %s in get_bongo_host" % (data.status)
             sys.exit(FAIL)
         json_data = json.loads(data.read())
-        host = "%s:%s" % (json_data['app']['tasks'][0]['host'],json_data['app']['tasks'][0]['ports'][0])
+        host = json_data['app']['tasks'][0]['host']
+        port = json_data['app']['tasks'][0]['ports'][0]
         con.close()
-        return host
+        return host, port
     except Exception, e:
-        print "get_bongo_host: %s :exception caught" % (e)
+        print "%s Exception caught in get_bongo_host" % (e)
         sys.exit(FAIL)
 
 def get_status(host, region):
@@ -46,13 +47,13 @@ def get_status(host, region):
             con.request("GET","/v1/choose-goose/health/" + cgnodes[region][i])
             data = con.getresponse()
             if data.status >= 300:
-                output = output + "%s status: Recieved non-2xx response= %s \n" % (cgnodes[region][i], data.status)
+                output = output + "%s Recieved non-2xx response= %s \n" % (cgnodes[region][i], data.status)
             else:
                 json_data = json.loads(data.read())
                 if json_data['status'] == 1:
-                    output = output + "%s status: %s \n" % (cgnodes[region][i], json_data['msg'])
+                    output = output + "%s status= %s \n" % (cgnodes[region][i], json_data['msg'])
         except Exception, e:
-            output = output + "get_status: %s exception caught for cg-node: %s" % (e,cgnodes[region][i])
+            output = output + "%s exception caught in get_status for cg-node= %s" % (e,cgnodes[region][i])
     con.close()
     if output == "\n":
         print "mirror-maker on `choose-goose` nodes are fine"
@@ -68,5 +69,10 @@ if __name__=="__main__":
     parser.add_option("-a", dest="app", action="store", default="bongo.useast.prod", help="App Id to retrieve the slave address")
     parser.add_option("-r", dest="region", action="store", default="east", help="Region for which choose-goose node health has to be checked")
     (options, args) = parser.parse_args()
-    host = get_bongo_host(options.server, options.app)
-    get_status(host, options.region)
+    host, port = get_bongo_host(options.server, options.app)
+    if "useast" in host:
+        host = host.rsplit("prd",1)
+        consul_host = "%snode.us-east-1.consul:%s" % (host[0], port)
+    else:
+        consul_host = "%s:%s" % (host, port)
+    get_status(consul_host, options.region)

@@ -18,11 +18,12 @@ def get_bongo_host(server, app):
             print "get_bongo_host: Recieved non-2xx response= %s" % (data.status)
             sys.exit(FAIL)
         json_data = json.loads(data.read())
-        host = "%s:%s" % (json_data['app']['tasks'][0]['host'],json_data['app']['tasks'][0]['ports'][0])
+        host = json_data['app']['tasks'][0]['host']
+        port = json_data['app']['tasks'][0]['ports'][0]
         con.close()
-        return host
+        return host, port
     except Exception, e:
-        print "get_bongo_host: %s :exception caught" % (e)
+        print "%s Exception caught in get_bongo_host" % (e)
         sys.exit(FAIL)
 
 def get_status(host, group):
@@ -31,18 +32,18 @@ def get_status(host, group):
         con.request("GET","/v1/kafka/health/" + group)
         data = con.getresponse()
         if data.status >= 300:
-            print "get_status: Recieved non-2xx response= %s" % (data.status)
+            print "Recieved non-2xx response= %s in get_status" % (data.status)
             sys.exit(FAIL)
         json_data = json.loads(data.read())
         con.close()
         if json_data['status'] == 1:
-            print "get_status: %s" % (json_data['msg'])
+            print "%s" % (json_data['msg'])
             sys.exit(FAIL)
         else:
             print " `%s` is fine" %group
             sys.exit(PASS)
     except Exception, e:
-        print "get_status: %s :exception caught" % (e)
+        print "%s  Exception caught in get_status" % (e)
         sys.exit(FAIL)
 
 
@@ -52,5 +53,10 @@ if __name__=="__main__":
     parser.add_option("-a", dest="app", action="store", default="bongo.useast.prod", help="App Id to retrieve the slave address")
     parser.add_option("-c", dest="group", action="store", default="yield_secor", help="Name of Consumer Group")
     (options, args) = parser.parse_args()
-    host = get_bongo_host(options.server, options.app)
-    get_status(host, options.group)
+    host, port = get_bongo_host(options.server, options.app)
+    if "useast" in host:
+        host = host.rsplit("prd",1)
+        consul_host = "%snode.us-east-1.consul:%s" % (host[0], port)
+    else:
+        consul_host = "%s:%s" % (host, port)
+    get_status(consul_host, options.group)

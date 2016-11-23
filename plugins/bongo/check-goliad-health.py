@@ -30,7 +30,7 @@ def get_bongo_host(server, app):
 def get_status(host, group):
     try:
         con = httplib.HTTPConnection(host,timeout=45)
-        con.request("GET","/v1/health/betty/" + group)
+        con.request("GET","/v1/health/goliad/" + group)
         data = con.getresponse()
         if data.status >= 300:
             print "Recieved non-2xx response= %s in get_status" % (data.status)
@@ -55,7 +55,7 @@ if __name__=="__main__":
     parser = OptionParser()
     parser.add_option("-s", dest="server", action="store", default="localhost:8080", help="Marathon Cluster address with port no")
     parser.add_option("-a", dest="app", action="store", default="bongo.useast.prod", help="App Id to retrieve the slave address")
-    parser.add_option("-c", dest="group", action="store", default="betty.useast.prod", help="Name of betty Consumer Group")
+    parser.add_option("-c", dest="group", action="store", default="goliad.useast.prod", help="Name of goliad Consumer Group")
     (options, args) = parser.parse_args()
     host, port = get_bongo_host(options.server, options.app)
     if "useast" in host:

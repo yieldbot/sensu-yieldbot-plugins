@@ -50,7 +50,6 @@ def get_status(host, group):
         print "%s Exception caught in get_status" % (e)
         sys.exit(FAIL)
 
-
 if __name__=="__main__":
     parser = OptionParser()
     parser.add_option("-s", dest="server", action="store", default="localhost:8080", help="Marathon Cluster address with port no")
